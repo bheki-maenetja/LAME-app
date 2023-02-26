@@ -19,6 +19,7 @@ sumy = "*"
 wikipedia-api = "*"
 scikit-learn = "*"
 plotly = "*"
+dash = "*"
 
 [dev-packages]
 
