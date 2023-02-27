@@ -20,6 +20,8 @@ wikipedia-api = "*"
 scikit-learn = "*"
 plotly = "*"
 dash = "*"
+pypdf2 = "*"
+docx2txt = "*"
 
 [dev-packages]
 
