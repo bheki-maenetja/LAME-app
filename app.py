@@ -2,8 +2,14 @@
 from dash import Dash, html, dcc, dash_table
 from dash.dependencies import Input, Output, State
 
+from PyPDF2 import PdfReader
+import docx2txt
+
 # Standard Imports
+import os
+
 # Local Imports
+from utils import file_handling as fh
 
 # Global Variables
 app = Dash(__name__)
@@ -81,8 +87,11 @@ For more info on how callback functions work you can visit the following links:
     Output("dummy", "children"),
     [Input("upload-data", "filename"), Input("upload-data", "contents")]
 )
-def upload_handler(a, b):
-    print(a, b)
+def upload_handler(f_names, f_contents):
+    if not f_names or not f_contents:
+        return None
+
+    fh.save_files(f_names, f_contents)
 
 # Running server
 if __name__ == "__main__":
