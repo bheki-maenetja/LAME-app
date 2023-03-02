@@ -22,10 +22,6 @@ plotly = "*"
 dash = "*"
 pypdf2 = "*"
 docx2txt = "*"
-google-api-python-client = "*"
-google-auth = "*"
-google-auth-httplib2 = "*"
-google-auth-oauthlib = "*"
 
 [dev-packages]
 
