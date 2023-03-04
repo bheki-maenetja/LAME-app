@@ -7,6 +7,8 @@ import docx2txt
 
 # Standard Imports
 import os
+from time import sleep
+import base64
 
 # Local Imports
 from utils import file_handling as fh
@@ -27,11 +29,14 @@ app.layout = html.Div(id="main-container", children=[
         id="upload-data",
         multiple=True,
         children=dcc.Loading(
+            color="white",
             children=[
                 html.Div(upload_text)
             ]
         )
     ),
+    html.Button("Download File", id="download-test"),
+    dcc.Download(id="download-component"),
     dcc.Tabs(id="main-tabs", value="1", children=[
         dcc.Tab(label="My Documents", value="1"),
         dcc.Tab(label="Information Extraction", value="2"),

@@ -2,10 +2,6 @@
 from PyPDF2 import PdfReader
 import docx2txt
 
-import cloudinary
-import cloudinary.uploader
-import cloudinary.api
-
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -14,14 +10,6 @@ import os
 import base64
 
 # Local Imports
-
-# Cloudinary configuration
-cloudinary.config(
-    cloud_name = os.getenv("CLOUD_NAME"),
-    api_key = os.getenv("CLOUD_KEY"),
-    api_secret = os.getenv("CLOUD_SECRET"),
-    secure = True
-)
 
 # Reading and Writing Data
 def save_files(f_names, f_contents):
@@ -50,17 +38,6 @@ def save_files(f_names, f_contents):
         else:
             print(f"Unsupported file extension '{extension}'")
             return None
-        
-        # meta_data = {
-        #     "title": doc_title,
-        #     "raw_text": text
-        # }
-        print(doc_title)
-        cloudinary.uploader.upload(
-            os.path.join("temp", f_name),
-            display_name=doc_title, 
-            folder="LAME_upload",
-        )
     
     for file in os.listdir('temp'):
         os.remove(os.path.join('temp', file))
