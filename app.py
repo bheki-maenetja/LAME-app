@@ -6,9 +6,7 @@ from PyPDF2 import PdfReader
 import docx2txt
 
 # Standard Imports
-import os
-from time import sleep
-import base64
+
 
 # Local Imports
 from utils import file_handling as fh
@@ -21,7 +19,7 @@ server = app.server
 
 UPLOAD_TEXT = "Drag and drop, or click to upload files to storage"
 
-docs = fh.get_documents()
+docs = fh.get_documents() # load documents from cloudinary
 
 # UI Layout
 ## Main App Layout (headings, file saver and file selector)
@@ -37,8 +35,6 @@ app.layout = html.Div(id="main-container", children=[
             ]
         )
     ),
-    html.Button("Download File", id="download-test"),
-    dcc.Download(id="download-component"),
     dcc.Tabs(id="main-tabs", value="1", children=[
         dcc.Tab(label="My Documents", value="1"),
         dcc.Tab(label="Information Extraction", value="2"),
@@ -48,7 +44,9 @@ app.layout = html.Div(id="main-container", children=[
     ]),
     html.Div(id='dummy', style={"display": "hidden"}),
     html.Div(id='dummy2', style={"display": "hidden"}),
-    html.Div(id='dummy3', style={"display": "hidden"})
+    html.Div(id='dummy3', style={"display": "hidden"}),
+    html.Div(id='dummy4', style={"display": "hidden"}),
+    html.Div(id='dummy5', style={"display": "hidden"}),
 ])
 
 # Callback functions
@@ -101,14 +99,6 @@ def upload_handler(f_names, f_contents):
         return None
 
     fh.save_files(f_names, f_contents)
-
-@app.callback(
-    Output("dummy2", "children"),
-    Input("download-test", "n_clicks"),
-)
-def document_download_handler(n_clicks):
-    if n_clicks is not None and n_clicks > 0:
-        fh.get_documents()
 
 # Running server
 if __name__ == "__main__":

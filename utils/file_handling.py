@@ -35,7 +35,6 @@ def save_files(f_names, f_contents):
             fp.write(base64.decodebytes(data))
         
         raw_text = get_raw_text(f_name, extension)
-        print(raw_text)
         if raw_text is not None:
             with open(os.path.join("raw_files", f"{doc_title}.txt"), "w") as f:
                 f.write(raw_text)
