@@ -22,7 +22,6 @@ plotly = "*"
 dash = "*"
 pypdf2 = "*"
 docx2txt = "*"
-cloudinary = "*"
 
 [dev-packages]
 
