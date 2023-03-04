@@ -44,7 +44,9 @@ app.layout = html.Div(id="main-container", children=[
         dcc.Tab(label="Clustering", value="4"),
         dcc.Tab(label="WikiBot", value="5"),
     ]),
-    html.Div(id='dummy', style={"display": "hidden"})
+    html.Div(id='dummy', style={"display": "hidden"}),
+    html.Div(id='dummy2', style={"display": "hidden"}),
+    html.Div(id='dummy3', style={"display": "hidden"})
 ])
 
 # Callback functions
@@ -97,6 +99,14 @@ def upload_handler(f_names, f_contents):
         return None
 
     fh.save_files(f_names, f_contents)
+
+@app.callback(
+    Output("dummy2", "children"),
+    Input("download-test", "n_clicks"),
+)
+def document_download_handler(n_clicks):
+    if n_clicks is not None and n_clicks > 0:
+        fh.get_documents()
 
 # Running server
 if __name__ == "__main__":

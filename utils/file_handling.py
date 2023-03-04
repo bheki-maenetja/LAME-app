@@ -32,36 +32,45 @@ def save_files(f_names, f_contents):
         with open(os.path.join('temp', f_name), "wb") as fp:
             fp.write(base64.decodebytes(data))
         
-        if extension == ".pdf":
-            pdf_reader = PdfReader(os.path.join('temp', f_name))
-            num_pages = len(pdf_reader.pages)
-            text = ""
-            for i in range(num_pages):
-                page = pdf_reader.pages[i]
-                text += page.extract_text()
-            print(text)
-        elif extension == ".docx":
-            text = docx2txt.process(os.path.join('temp', f_name))
-            print(text)
-        elif extension in (".txt", ".md"):
-            with open(os.path.join('temp', f_name), "r") as file:
-                text = file.read()
-            print(text)
-        else:
-            print(f"Unsupported file extension '{extension}'")
-            return None
-        
-        # meta_data = {
-        #     "title": doc_title,
-        #     "raw_text": text
-        # }
-        print(doc_title)
+        raw_text = get_raw_text(f_name, extension)
+        print(raw_text)
+        if raw_text is not None:
+            with open(os.path.join("raw_files", f"{doc_title}.txt"), "w") as f:
+                f.write(raw_text)
+
         cloudinary.uploader.upload(
-            os.path.join("temp", f_name),
+            os.path.join("raw_files", f"{doc_title}.txt"),
             display_name=doc_title, 
             folder="LAME_upload",
             resource_type="auto"
         )
     
-    for file in os.listdir('temp'):
-        os.remove(os.path.join('temp', file))
+    for file in os.listdir("temp"):
+        os.remove(os.path.join("temp", file))
+    
+    for file in os.listdir("raw_files"):
+        os.remove(os.path.join("raw_files", file))
+
+def get_raw_text(f_name, extension):
+    if extension == ".pdf":
+        pdf_reader = PdfReader(os.path.join('temp', f_name))
+        num_pages = len(pdf_reader.pages)
+        text = ""
+        for i in range(num_pages):
+            page = pdf_reader.pages[i]
+            text += page.extract_text()
+    elif extension == ".docx":
+        text = docx2txt.process(os.path.join('temp', f_name))
+    elif extension in (".txt", ".md"):
+        with open(os.path.join('temp', f_name), "r") as file:
+            text = file.read()
+    else:
+        print(f"Unsupported file extension '{extension}'")
+        return None
+    
+    return text
+
+def get_documents():
+    resources = cloudinary.api.resources_by_asset_folder("LAME_upload")
+
+    print(resources, type(resources))
