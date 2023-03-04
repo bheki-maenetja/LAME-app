@@ -9,6 +9,8 @@ import cloudinary.api
 from dotenv import load_dotenv
 load_dotenv()
 
+import requests as req
+
 # Standard Library Imports
 import os
 import base64
@@ -42,7 +44,9 @@ def save_files(f_names, f_contents):
             os.path.join("raw_files", f"{doc_title}.txt"),
             display_name=doc_title, 
             folder="LAME_upload",
-            resource_type="auto"
+            resource_type="auto",
+            tags=["LAME_upload", doc_title],
+            type="upload"
         )
     
     for file in os.listdir("temp"):
@@ -71,6 +75,16 @@ def get_raw_text(f_name, extension):
     return text
 
 def get_documents():
-    resources = cloudinary.api.resources_by_asset_folder("LAME_upload")
+    resources = cloudinary.api.resources_by_tag(
+        "LAME_upload",
+        resource_type="raw",
+        tags=True,
+    )['resources']
 
-    print(resources, type(resources))
+    for r in resources:
+        url = r['url']
+        res = req.get(url)
+        r["content"] = res.text
+        r["title"] = next(t for t in r["tags"] if t != "LAME_upload")
+    
+    return resources

@@ -19,7 +19,9 @@ app.title = "Lexical Analyser Manipulator and Extractor (LAME)"
 
 server = app.server
 
-upload_text = "Drag and drop, or click to upload files to storage"
+UPLOAD_TEXT = "Drag and drop, or click to upload files to storage"
+
+docs = fh.get_documents()
 
 # UI Layout
 ## Main App Layout (headings, file saver and file selector)
@@ -31,7 +33,7 @@ app.layout = html.Div(id="main-container", children=[
         children=dcc.Loading(
             color="white",
             children=[
-                html.Div(upload_text)
+                html.Div(UPLOAD_TEXT)
             ]
         )
     ),
