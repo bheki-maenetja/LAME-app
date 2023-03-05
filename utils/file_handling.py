@@ -11,6 +11,8 @@ load_dotenv()
 
 import requests as req
 
+import pandas as pd
+
 # Standard Library Imports
 import os
 import base64
@@ -86,4 +88,4 @@ def get_documents():
         r["content"] = res.text
         r["title"] = next(t for t in r["tags"] if t != "LAME_upload")
     
-    return resources
+    return pd.DataFrame.from_dict(resources)
