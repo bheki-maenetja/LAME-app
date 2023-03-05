@@ -1,6 +1,7 @@
 # Third-Party Imports
 from dash import Dash, html, dcc, dash_table
 from dash.dependencies import Input, Output, State
+import dash_bootstrap_components as dbc
 
 from PyPDF2 import PdfReader
 import docx2txt
@@ -35,19 +36,106 @@ app.layout = html.Div(id="main-container", children=[
             ]
         )
     ),
-    dcc.Tabs(id="main-tabs", value="1", children=[
-        dcc.Tab(label="My Documents", value="1"),
-        dcc.Tab(label="Information Extraction", value="2"),
-        dcc.Tab(label="Summarisation", value="3"),
-        dcc.Tab(label="Clustering", value="4"),
-        dcc.Tab(label="WikiBot", value="5"),
+    dcc.Tabs(id="main-tabs", value="docs", children=[
+        dcc.Tab(
+            className="main-tab",
+            selected_className="main-tab-selected",
+            label="My Documents", 
+            value="docs"
+        ),
+        dcc.Tab(
+            className="main-tab",
+            selected_className="main-tab-selected",
+            label="Information Extraction", 
+            value="info-extraction"
+        ),
+        dcc.Tab(
+            className="main-tab",
+            selected_className="main-tab-selected",
+            label="Summarisation", 
+            value="summarisation"
+        ),
+        dcc.Tab(
+            className="main-tab",
+            selected_className="main-tab-selected",
+            label="Clustering", 
+            value="clustering"
+        ),
+        dcc.Tab(
+            className="main-tab",
+            selected_className="main-tab-selected",
+            label="WikiBot", 
+            value="wikibot"
+        ),
     ]),
+    html.Div(id="section-container"),
     html.Div(id='dummy', style={"display": "hidden"}),
     html.Div(id='dummy2', style={"display": "hidden"}),
     html.Div(id='dummy3', style={"display": "hidden"}),
     html.Div(id='dummy4', style={"display": "hidden"}),
     html.Div(id='dummy5', style={"display": "hidden"}),
 ])
+
+## Major Components
+### Document Table
+def section_selector(s_name):
+    if s_name == "docs":
+        return get_doc_section()
+    elif s_name == "info-extraction":
+        return get_info_extraction_section()
+    elif s_name == "summarisation":
+        return get_summary_section()
+    elif s_name == "clustering":
+        return get_clustering_section()
+    elif s_name == "wikibot":
+        return get_wiki_bot_section()
+
+def get_doc_section():
+    return html.Div(
+        id="doc-section",
+        children=[
+            dbc.Table.from_dataframe(
+                docs[["title", "created_at", "url"]],
+                id="doc-table"
+            )
+        ]
+    )
+
+### Info Extraction Section
+def get_info_extraction_section():
+    return html.Div(
+        id="info-extraction-section",
+        children=[
+            html.H3("Information Extraction")
+        ]
+    )
+
+### Summary Section
+def get_summary_section():
+    return html.Div(
+        id="summary-section",
+        children=[
+            html.H3("Summarisation")
+        ]
+    )
+
+### Clustering Section
+def get_clustering_section():
+    return html.Div(
+        id="clustering-section",
+        children=[
+            html.H3("Document Clustering")
+        ]
+    )
+
+### WikiBot Section
+def get_wiki_bot_section():
+    return html.Div(
+        id="wiki-bot-section",
+        children=[
+            html.H3("The WikiBot")
+        ]
+    )
 
 # Callback functions
 """
@@ -99,6 +187,13 @@ def upload_handler(f_names, f_contents):
         return None
 
     fh.save_files(f_names, f_contents)
+
+@app.callback(
+    Output("section-container", "children"),
+    Input("main-tabs", "value"),
+)
+def main_tabs_handler(value):
+    return section_selector(value)
 
 # Running server
 if __name__ == "__main__":
