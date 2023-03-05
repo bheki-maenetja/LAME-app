@@ -23,6 +23,7 @@ dash = "*"
 pypdf2 = "*"
 docx2txt = "*"
 cloudinary = "*"
+dash-bootstrap-components = "*"
 
 [dev-packages]
 
