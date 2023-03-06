@@ -1,7 +1,7 @@
-/* 
+/*
 Styling for the app.
 To find out more about styling go to https://dash.plotly.com/external-resources
- */
+*/
 
 * {
     box-sizing: border-box;
@@ -33,6 +33,7 @@ body {
     padding: 2em;
     margin: 0 auto;
     background-color: var(--vanilla);
+    height: 100vh;
 }
 
 /* Upload Component */
@@ -91,10 +92,37 @@ body {
 #doc-table {
     width: 100%;
     border-collapse: collapse;
+    background-color: var(--darkblue);
+    color: white;
 }
 
 #doc-table td, #doc-table th {
-    border: 0.1em solid red;
+    border: 0.1em solid var(--orange);
     padding: 0.5em;
 }
 
+#doc-table tr:hover {
+    background-color: var(--paleyellow);
+    color: var(--darkblue)
+} 
+
+/* Accordions */
+.doc-accord-item * {
+    background-color: var(--darkblue);
+    color: white;
+}
+
+.doc-accord-item {
+    border: 0.2em solid var(--orange);
+}
+
+.doc-content {
+    height: 15em;
+    overflow-y: scroll;
+    width: 100%;
+    padding: 1em;
+    border: 0.2em solid var(--orange);
+    border-radius: 1em;
+    background-color: var(--paleyellow);
+    color: var(--darkblue)
+}

@@ -13,7 +13,7 @@ import docx2txt
 from utils import file_handling as fh
 
 # Global Variables
-app = Dash(__name__)
+app = Dash(name=__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 app.title = "Lexical Analyser Manipulator and Extractor (LAME)"
 
 server = app.server
@@ -80,7 +80,7 @@ app.layout = html.Div(id="main-container", children=[
 ### Document Table
 def section_selector(s_name):
     if s_name == "docs":
-        return get_doc_section()
+        return get_doc_section_2()
     elif s_name == "info-extraction":
         return get_info_extraction_section()
     elif s_name == "summarisation":
@@ -94,9 +94,49 @@ def get_doc_section():
     return html.Div(
         id="doc-section",
         children=[
-            dbc.Table.from_dataframe(
-                docs[["title", "created_at", "url"]],
-                id="doc-table"
+            dash_table.DataTable(
+                docs[["title", "created_at", "url"]].to_dict('records'),
+                id="doc-table",
+                editable=False,
+                row_selectable="single",
+                cell_selectable=False,
+                style_cell={
+                    "backgroundColor": "blue"
+                }
+            )
+        ]
+    )
+
+def get_doc_section_2():
+    docs_copy = docs.copy(deep=True).to_dict('records')
+
+    return html.Div(
+        id="doc-section",
+        children=[
+            dbc.Accordion(
+                id="doc-accord",
+                children=[
+                    dbc.AccordionItem(
+                        id=doc["public_id"],
+                        title=doc["title"],
+                        class_name="doc-accord-item",
+                        children=[
+                            html.Div(
+                                className="doc-accord-item-content",
+                                children=[
+                                    html.P(f"URL: {doc['url']}"),
+                                    html.P("Raw text:"),
+                                    html.P(
+                                        children=doc["content"],
+                                        className="doc-content",
+                                    )
+                                ]
+                            )
+                        ],
+                    )
+                    for doc in docs_copy
+                ],
+                start_collapsed=True
             )
         ]
     )
