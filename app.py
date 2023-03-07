@@ -25,6 +25,7 @@ docs = fh.get_documents() # load documents from cloudinary
 # UI Layout
 ## Main App Layout (headings, file saver and file selector)
 app.layout = html.Div(id="main-container", children=[
+    dcc.Location(id="pageurl", refresh=True),
     html.H1("Welcome to LAME!!!"),
     dcc.Upload(
         id="upload-data",
@@ -80,7 +81,7 @@ app.layout = html.Div(id="main-container", children=[
 ### Document Table
 def section_selector(s_name):
     if s_name == "docs":
-        return get_doc_section_2()
+        return get_doc_section()
     elif s_name == "info-extraction":
         return get_info_extraction_section()
     elif s_name == "summarisation":
@@ -91,33 +92,32 @@ def section_selector(s_name):
         return get_wiki_bot_section()
 
 def get_doc_section():
-    return html.Div(
-        id="doc-section",
-        children=[
-            dash_table.DataTable(
-                docs[["title", "created_at", "url"]].to_dict('records'),
-                id="doc-table",
-                editable=False,
-                row_selectable="single",
-                cell_selectable=False,
-                style_cell={
-                    "backgroundColor": "blue"
-                }
-            )
-        ]
-    )
-
-def get_doc_section_2():
     docs_copy = docs.copy(deep=True).to_dict('records')
 
     return html.Div(
         id="doc-section",
         children=[
+            html.Div(
+                id="doc-btn-container",
+                children=[
+                    html.Button(
+                        id="download-doc-btn", 
+                        children="Download"
+                    ),
+                    dcc.Download(id="download-doc"),
+                    html.Button(
+                        id="delete-doc-btn", 
+                        children="Delete",
+                        # disabled=True,
+                    ),
+                ]
+            ),
             dbc.Accordion(
                 id="doc-accord",
                 children=[
                     dbc.AccordionItem(
                         id=doc["public_id"],
+                        item_id=doc["public_id"],
                         title=doc["title"],
                         class_name="doc-accord-item",
                         children=[
@@ -219,14 +219,17 @@ For more info on how callback functions work you can visit the following links:
 """
 
 @app.callback(
-    Output("dummy", "children"),
+    Output("pageurl", "pathname"),
     [Input("upload-data", "filename"), Input("upload-data", "contents")]
 )
 def upload_handler(f_names, f_contents):
+    global docs
     if not f_names or not f_contents:
         return None
 
     fh.save_files(f_names, f_contents)
+    docs = fh.get_documents()
+    return " "
 
 @app.callback(
     Output("section-container", "children"),
@@ -234,6 +237,15 @@ def upload_handler(f_names, f_contents):
 )
 def main_tabs_handler(value):
     return section_selector(value)
+
+@app.callback(
+    Output("dummy", "children"),
+    Input("doc-accord", "active_item"),
+    suppress_callback_exceptions=True,
+    prevent_initial_call=True,
+)
+def accordion_handler(item):
+    print(item)
 
 # Running server
 if __name__ == "__main__":
