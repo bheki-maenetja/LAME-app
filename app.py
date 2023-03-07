@@ -21,6 +21,7 @@ server = app.server
 UPLOAD_TEXT = "Drag and drop, or click to upload files to storage"
 
 docs = fh.get_documents() # load documents from cloudinary
+current_document = None
 
 # UI Layout
 ## Main App Layout (headings, file saver and file selector)
