@@ -21,12 +21,12 @@ server = app.server
 UPLOAD_TEXT = "Drag and drop, or click to upload files to storage"
 
 docs = fh.get_documents() # load documents from cloudinary
-current_document = None
+current_doc = None
 
 # UI Layout
 ## Main App Layout (headings, file saver and file selector)
 app.layout = html.Div(id="main-container", children=[
-    dcc.Location(id="pageurl", refresh=True),
+    dcc.Location(id="pagereloader", refresh=True),
     html.H1("Welcome to LAME!!!"),
     dcc.Upload(
         id="upload-data",
@@ -102,14 +102,17 @@ def get_doc_section():
                 id="doc-btn-container",
                 children=[
                     html.Button(
-                        id="download-doc-btn", 
-                        children="Download"
+                        id="download-doc-btn",
+                        className="doc-btn-disabled", 
+                        children="Download Raw Text",
+                        disabled=True,
                     ),
                     dcc.Download(id="download-doc"),
                     html.Button(
-                        id="delete-doc-btn", 
-                        children="Delete",
-                        # disabled=True,
+                        id="delete-doc-btn",
+                        className="doc-btn-disabled", 
+                        children="Delete Document",
+                        disabled=True,
                     ),
                 ]
             ),
@@ -218,9 +221,9 @@ For more info on how callback functions work you can visit the following links:
     * https://dash.plotly.com/sharing-data-between-callbacks
     * https://dash.plotly.com/advanced-callbacks
 """
-
+## Docs Page Callbacks
 @app.callback(
-    Output("pageurl", "pathname"),
+    Output("pagereloader", "pathname"),
     [Input("upload-data", "filename"), Input("upload-data", "contents")]
 )
 def upload_handler(f_names, f_contents):
@@ -240,13 +243,44 @@ def main_tabs_handler(value):
     return section_selector(value)
 
 @app.callback(
-    Output("dummy", "children"),
+    Output("download-doc-btn", "className"),
+    Output("download-doc-btn", "disabled"),
+    Output("delete-doc-btn", "className"),
+    Output("delete-doc-btn", "disabled"),
     Input("doc-accord", "active_item"),
     suppress_callback_exceptions=True,
     prevent_initial_call=True,
 )
-def accordion_handler(item):
-    print(item)
+def accordion_handler(item_id):
+    global current_doc
+    if item_id is not None:
+        current_doc = docs[docs["public_id"] == item_id].to_dict('records')[0]
+        return "doc-btn", False, "doc-btn", False
+    elif item_id is None:
+        current_doc = None
+        return "doc-btn-disabled", True, "doc-btn-disabled", True
+
+@app.callback(
+    Output("download-doc", "data"),
+    Input("download-doc-btn", "n_clicks"),
+    suppress_callback_exceptions=True,
+    prevent_initial_call=True,
+)
+def doc_download_handler(n_clicks):
+    if n_clicks is not None and n_clicks > 0 and current_doc is not None:
+            doc_title = current_doc["title"]
+            doc_content = current_doc["content"]
+            return dict(content=doc_content, filename=f"{doc_title}.txt")
+
+@app.callback(
+    Output("pagereloader", "pathname"),
+    Input("delete-doc-btn", "n_clicks"),
+)
+def doc_delete_handler(n_clicks):
+    if n_clicks is not None and n_clicks > 0 and current_doc is not None:
+        doc_id = current_doc["public_id"]
+        fh.delete_document(doc_id)
+        return " "
 
 # Running server
 if __name__ == "__main__":
