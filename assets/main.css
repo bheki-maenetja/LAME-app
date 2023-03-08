@@ -143,9 +143,9 @@ body {
 }
 
 .doc-btn[id="delete-doc-btn"] {
-    border: 0.15em solid var(--red);
-    background-color: var(--paleyellow);
-    color: var(--red);
+    border: 0.15em solid var(--paleyellow);
+    background-color: var(--red);
+    color: var(--paleyellow);
     font-weight: 900;
 }
 
@@ -160,9 +160,9 @@ body {
 }
 
 .doc-btn[id="delete-doc-btn"]:hover {
-    border-color: var(--paleyellow);
-    background-color: var(--red);
-    color: var(--paleyellow);
+    border-color: var(--red);
+    background-color: var(--paleyellow);
+    color: var(--red);
 }
 
 .doc-btn[id="delete-doc-btn"]:active {
