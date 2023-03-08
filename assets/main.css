@@ -124,34 +124,53 @@ body {
 #doc-btn-container > * {
     width: 50%;
     padding: 0.35em;
-    border: none;
     border-radius: 0.5em;
 }
 
 #download-doc-btn {
     margin-right: 0.5em;
+}
+
+#delete-doc-btn {
+    margin-left: 0.5em;
+}
+
+.doc-btn[id="download-doc-btn"] {
     border: 0.15em solid var(--darkblue);
     background-color: var(--vanilla);
     color: var(--darkblue);
     font-weight: 900;
 }
 
-#delete-doc-btn {
-    margin-left: 0.5em;
+.doc-btn[id="delete-doc-btn"] {
     border: 0.15em solid var(--red);
     background-color: var(--paleyellow);
     color: var(--red);
     font-weight: 900;
 }
 
-#download-doc-btn:hover {
+.doc-btn[id="download-doc-btn"]:hover {
     border-color: var(--vanilla);
     background-color: var(--darkblue);
     color: var(--vanilla);
 }
 
-#delete-doc-btn:hover {
+.doc-btn[id="download-doc-btn"]:active {
+    background-color: var(--orange);
+}
+
+.doc-btn[id="delete-doc-btn"]:hover {
     border-color: var(--paleyellow);
     background-color: var(--red);
     color: var(--paleyellow);
+}
+
+.doc-btn[id="delete-doc-btn"]:active {
+    background-color: var(--vanilla);
+}
+
+.doc-btn-disabled {
+    background-color: lightgray;
+    border: none;
+    color: slategray;
 }
