@@ -75,6 +75,7 @@ def get_raw_text(f_name, extension):
     
     return text
 
+# Loading Documents
 def get_documents():
     resources = cloudinary.api.resources_by_tag(
         "LAME_upload",
@@ -92,3 +93,8 @@ def get_documents():
     doc_df.sort_values("title", inplace=True, key=lambda x: x.str.lower())
 
     return doc_df
+
+# Deleting Documents
+def delete_document(doc_id):
+    res = cloudinary.uploader.destroy(doc_id, resource_type="raw")
+    print(res)
