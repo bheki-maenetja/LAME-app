@@ -1,5 +1,5 @@
 # Third-Party Imports
-from dash import Dash, html, dcc, dash_table
+from dash import Dash, html, dcc, ctx
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 
@@ -26,7 +26,23 @@ current_doc = None
 # UI Layout
 ## Main App Layout (headings, file saver and file selector)
 app.layout = html.Div(id="main-container", children=[
-    dcc.Location(id="pagereloader", refresh=True),
+    dcc.ConfirmDialog(
+        id='confirm-save',
+        message='Your file(s) were saved successfully.\nPress OK to continue'
+    ),
+    dcc.ConfirmDialog(
+        id='confirm-save-error',
+        message='Error: Your file(s) could not be saved.'
+    ),
+    dcc.ConfirmDialog(
+        id='confirm-doc-delete',
+        message='Your file was deleted successfully.\nPress OK to continue',
+        displayed=False,
+    ),
+    dcc.ConfirmDialog(
+        id='confirm-doc-delete-error',
+        message='Error: Your file could not be deleted.'
+    ),
     html.H1("Welcome to LAME!!!"),
     dcc.Upload(
         id="upload-data",
@@ -248,15 +264,25 @@ def refresh_page(tab_value, children):
 ## Docs Page Callbacks
 @app.callback(
     Output("reload-handler-0", "children"),
+    Output("confirm-save", "displayed"),
+    Output("confirm-save-error", "displayed"),
     [Input("upload-data", "filename"), Input("upload-data", "contents")]
 )
 def upload_handler(f_names, f_contents):
     global docs
-    if not f_names or not f_contents:
-        return None
 
-    fh.save_files(f_names, f_contents)
+    is_success = True
+
+    if not f_names or not f_contents:
+        return None, False, False
+
+    res = fh.save_files(f_names, f_contents)
+
+    is_success = res
+    
     docs = fh.get_documents()
+    return None, is_success, not is_success
+
 
 @app.callback(
     Output("reload-handler-1", "children"),
@@ -296,15 +322,23 @@ def doc_download_handler(n_clicks):
 
 @app.callback(
     Output("reload-handler-2", "children"),
+    Output("confirm-doc-delete", "displayed"),
+    Output("confirm-doc-delete-error", "displayed"),
     Input("delete-doc-btn", "n_clicks"),
+    suppress_callback_exceptions=True,
+    prevent_initial_call=True,
 )
 def doc_delete_handler(n_clicks):
     global docs
 
     if n_clicks is not None and n_clicks > 0 and current_doc is not None:
+        is_success = True
         doc_id = current_doc["public_id"]
-        fh.delete_document(doc_id)
+        res = fh.delete_document(doc_id)
+        is_success = res
         docs = fh.get_documents()
+        return None, is_success, not is_success
+    return None, False, False
 
 # Running server
 if __name__ == "__main__":
