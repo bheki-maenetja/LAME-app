@@ -33,10 +33,15 @@ def save_files(f_names, f_contents):
         doc_title, extension = os.path.splitext(f_name)
 
         data = f_content.encode("utf8").split(b";base64,")[1]
+        
         with open(os.path.join('temp', f_name), "wb") as fp:
             fp.write(base64.decodebytes(data))
         
-        raw_text = get_raw_text(f_name, extension)
+        try:
+            raw_text = get_raw_text(f_name, extension)
+        except:
+            return False
+
         if raw_text is not None:
             with open(os.path.join("raw_files", f"{doc_title}.txt"), "w") as f:
                 f.write(raw_text)
@@ -55,6 +60,8 @@ def save_files(f_names, f_contents):
     
     for file in os.listdir("raw_files"):
         os.remove(os.path.join("raw_files", file))
+    
+    return True
 
 def get_raw_text(f_name, extension):
     if extension == ".pdf":
@@ -70,8 +77,7 @@ def get_raw_text(f_name, extension):
         with open(os.path.join('temp', f_name), "r") as file:
             text = file.read()
     else:
-        print(f"Unsupported file extension '{extension}'")
-        return None
+        raise Exception(f"Unsupported file extension '{extension}'")
     
     return text
 
@@ -97,4 +103,4 @@ def get_documents():
 # Deleting Documents
 def delete_document(doc_id):
     res = cloudinary.uploader.destroy(doc_id, resource_type="raw")
-    print(res)
+    return res['result'] == "ok"
