@@ -76,6 +76,12 @@ app.layout = html.Div(id="main-container", children=[
     html.Div(id='dummy3', style={"display": "hidden"}),
     html.Div(id='dummy4', style={"display": "hidden"}),
     html.Div(id='dummy5', style={"display": "hidden"}),
+    html.Div(id='reload-handler-0', style={"display": "hidden"}),
+    html.Div(id='reload-handler-1', style={"display": "hidden"}),
+    html.Div(id='reload-handler-2', style={"display": "hidden"}),
+    html.Div(id='reload-handler-3', style={"display": "hidden"}),
+    html.Div(id='reload-handler-4', style={"display": "hidden"}),
+    html.Div(id='reload-handler-5', style={"display": "hidden"}),
 ])
 
 ## Major Components
@@ -221,9 +227,27 @@ For more info on how callback functions work you can visit the following links:
     * https://dash.plotly.com/sharing-data-between-callbacks
     * https://dash.plotly.com/advanced-callbacks
 """
+## Page Refresh Callback
+@app.callback(
+    Output("section-container", "children"),
+    inputs=dict(
+        children=(
+            Input("reload-handler-0", "children"), 
+            Input("reload-handler-1", "children"), 
+            Input("reload-handler-2", "children"),
+            Input("reload-handler-3", "children"),
+            Input("reload-handler-4", "children"),
+            Input("reload-handler-5", "children"),      
+        ),
+        tab_value=State("main-tabs", "value"),
+    )
+)
+def refresh_page(tab_value, children):
+    return section_selector(tab_value)
+
 ## Docs Page Callbacks
 @app.callback(
-    Output("pagereloader", "pathname"),
+    Output("reload-handler-0", "children"),
     [Input("upload-data", "filename"), Input("upload-data", "contents")]
 )
 def upload_handler(f_names, f_contents):
@@ -233,14 +257,12 @@ def upload_handler(f_names, f_contents):
 
     fh.save_files(f_names, f_contents)
     docs = fh.get_documents()
-    return " "
 
 @app.callback(
-    Output("section-container", "children"),
+    Output("reload-handler-1", "children"),
     Input("main-tabs", "value"),
 )
-def main_tabs_handler(value):
-    return section_selector(value)
+def main_tabs_handler(value): return None
 
 @app.callback(
     Output("download-doc-btn", "className"),
@@ -273,14 +295,16 @@ def doc_download_handler(n_clicks):
             return dict(content=doc_content, filename=f"{doc_title}.txt")
 
 @app.callback(
-    Output("pagereloader", "pathname"),
+    Output("reload-handler-2", "children"),
     Input("delete-doc-btn", "n_clicks"),
 )
 def doc_delete_handler(n_clicks):
+    global docs
+
     if n_clicks is not None and n_clicks > 0 and current_doc is not None:
         doc_id = current_doc["public_id"]
         fh.delete_document(doc_id)
-        return " "
+        docs = fh.get_documents()
 
 # Running server
 if __name__ == "__main__":
