@@ -115,6 +115,13 @@ def section_selector(s_name):
         return get_wiki_bot_section()
 
 def get_doc_section():
+    if docs is None:
+        text = "No documents to display. Upload documents to get started."
+        return html.H2(
+            children=text,
+            className="no-docs-heading"
+        )
+
     docs_copy = docs.copy(deep=True).to_dict('records')
 
     return html.Div(
@@ -169,6 +176,13 @@ def get_doc_section():
 
 ### Info Extraction Section
 def get_info_extraction_section():
+    if docs is None:
+        text = "Please upload documents to get started with information extraction."
+        return html.H2(
+            children=text,
+            className="no-docs-heading"
+        )
+
     return html.Div(
         id="info-extraction-section",
         children=[
@@ -178,6 +192,13 @@ def get_info_extraction_section():
 
 ### Summary Section
 def get_summary_section():
+    if docs is None:
+        text = "Please upload documents to get started with text summmarisation."
+        return html.H2(
+            children=text,
+            className="no-docs-heading"
+        )
+
     return html.Div(
         id="summary-section",
         children=[
@@ -187,6 +208,13 @@ def get_summary_section():
 
 ### Clustering Section
 def get_clustering_section():
+    if docs is None:
+        text = "Please upload documents to get started with document clustering."
+        return html.H2(
+            children=text,
+            className="no-docs-heading"
+        )
+
     return html.Div(
         id="clustering-section",
         children=[

@@ -89,6 +89,8 @@ def get_documents():
         tags=True,
     )['resources']
 
+    if len(resources) == 0: return None
+
     for r in resources:
         url = r['url']
         res = req.get(url)
