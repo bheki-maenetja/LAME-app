@@ -3,9 +3,6 @@ from dash import Dash, html, dcc, ctx
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 
-from PyPDF2 import PdfReader
-import docx2txt
-
 # Standard Imports
 
 
@@ -104,7 +101,7 @@ app.layout = html.Div(id="main-container", children=[
 ])
 
 ## Major Components
-### Document Table
+### Section Selector
 def section_selector(s_name):
     if s_name == "docs":
         return get_doc_section()
@@ -116,6 +113,53 @@ def section_selector(s_name):
         return get_clustering_section()
     elif s_name == "wikibot":
         return get_wiki_bot_section()
+
+### Documents Section
+new_doc_modal = html.Div(
+    [
+        dbc.Modal(
+            [
+                dbc.ModalHeader(
+                    id="new-doc-modal-header",
+                    children=dbc.ModalTitle(
+                        id="new-doc-modal-heading",
+                        children="New Document",
+                    ),
+                ),
+                dbc.ModalBody(
+                    id="new-doc-modal-body",
+                    children=[
+                        html.H3("Name"),
+                        dbc.Input(
+                            id="new-doc-name",
+                            placeholder="Name of new document"
+                        ),
+                        html.Br(),
+                        html.H3("Content"),
+                        dbc.Textarea(
+                            id="new-doc-content",
+                            placeholder="Content of new document",
+                            draggable=False,
+                        )
+                    ]
+                ),
+                dbc.ModalFooter(
+                    id="new-doc-modal-footer",
+                    children=[
+                        dbc.Button(
+                            id="new-doc-modal-btn",
+                            children="Create New Document",
+                        )
+                    ]
+                ),
+            ],
+            id="new-doc-modal",
+            keyboard=False,
+            backdrop="static",
+            fullscreen=True,
+        ),
+    ],
+)
 
 def get_doc_section():
     if docs is None:
@@ -130,9 +174,16 @@ def get_doc_section():
     return html.Div(
         id="doc-section",
         children=[
+            new_doc_modal,
             html.Div(
                 id="doc-btn-container",
                 children=[
+                    html.Button(
+                        id="new-doc-btn",
+                        className="doc-btn", 
+                        children="New Document",
+                        disabled=False,
+                    ),
                     html.Button(
                         id="download-doc-btn",
                         className="doc-btn-disabled", 
@@ -323,6 +374,8 @@ def upload_handler(f_names, f_contents):
 def main_tabs_handler(value): return None
 
 @app.callback(
+    Output("new-doc-btn", "className"),
+    Output("new-doc-btn", "disabled"),
     Output("download-doc-btn", "className"),
     Output("download-doc-btn", "disabled"),
     Output("delete-doc-btn", "className"),
@@ -335,10 +388,20 @@ def accordion_handler(item_id):
     global current_doc
     if item_id is not None:
         current_doc = docs[docs["public_id"] == item_id].to_dict('records')[0]
-        return "doc-btn", False, "doc-btn", False
+        return "doc-btn-disabled", True, "doc-btn", False, "doc-btn", False
     elif item_id is None:
         current_doc = None
-        return "doc-btn-disabled", True, "doc-btn-disabled", True
+        return "doc-btn", False, "doc-btn-disabled", True, "doc-btn-disabled", True
+
+@app.callback(
+    Output("new-doc-modal", "is_open"),
+    Input("new-doc-btn", "n_clicks"),
+    suppress_callback_exceptions=True,
+    prevent_initial_call=True,
+)
+def new_doc_handler(n_clicks):
+    if n_clicks is not None:
+        return True
 
 @app.callback(
     Output("download-doc", "data"),
