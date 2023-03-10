@@ -28,6 +28,8 @@ body {
 
 /* Containers */
 #main-container {
+    display: flex;
+    flex-direction: column;
     width: 100%;
     min-height: fit-content;
     padding: 2em;
@@ -37,6 +39,15 @@ body {
     max-height: 100%;
 }
 
+#section-container {
+    min-height: fit-content;
+    flex-grow: 1;
+    overflow-y: scroll;
+    padding: 2em;
+    border: 0.25em solid var(--darkblue);
+    border-radius: 1em;
+}
+
 /* Upload Component */
 #upload-data {
     display: flex;
@@ -44,7 +55,7 @@ body {
     align-items: center;
     height: 5em;
     padding: auto 0;
-    border-radius: 0.5em;
+    border-radius: 1em;
     border: 0.3em solid var(--darkblue);
     margin: 1em 0;
     text-align: center;
@@ -74,8 +85,16 @@ body {
 
 #main-tabs .main-tab {
     border: 0.1em solid var(--orange);
-    border-radius: 1em 1em 0 0;
+    /* border-radius: 1em 1em 0 0; */
     background-color: var(--paleyellow);
+}
+
+#main-tabs .main-tab:first-child {
+    border-radius: 1em 0 0 1em;
+}
+
+#main-tabs .main-tab:last-child {
+    border-radius: 0 1em 1em 0;
 }
 
 #main-tabs .main-tab-selected {
