@@ -43,14 +43,17 @@ app.layout = html.Div(id="main-container", children=[
         id='confirm-doc-delete-error',
         message='Error: Your file could not be deleted.'
     ),
-    html.H1("Welcome to LAME!!!"),
+    html.H1(id="main-heading", children="Lexical Analyser Manipulator and Extractor"),
     dcc.Upload(
         id="upload-data",
         multiple=True,
         children=dcc.Loading(
-            color="white",
+            color="#003049",
             children=[
-                html.Div(UPLOAD_TEXT)
+                html.Div(
+                    id="upload-text",
+                    children=UPLOAD_TEXT,
+                )
             ]
         )
     ),
@@ -294,6 +297,7 @@ def refresh_page(tab_value, children):
     Output("reload-handler-0", "children"),
     Output("confirm-save", "displayed"),
     Output("confirm-save-error", "displayed"),
+    Output("upload-text", "children"),
     [Input("upload-data", "filename"), Input("upload-data", "contents")]
 )
 def upload_handler(f_names, f_contents):
@@ -302,14 +306,14 @@ def upload_handler(f_names, f_contents):
     is_success = True
 
     if not f_names or not f_contents:
-        return None, False, False
+        return None, False, False, UPLOAD_TEXT
 
     res = fh.save_files(f_names, f_contents)
 
     is_success = res
     
     docs = fh.get_documents()
-    return None, is_success, not is_success
+    return None, is_success, not is_success, UPLOAD_TEXT
 
 
 @app.callback(

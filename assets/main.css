@@ -24,6 +24,13 @@ body {
 }
 
 /* Headings */
+#main-heading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
 .no-docs-heading {
     display: flex;
     justify-content: center;
