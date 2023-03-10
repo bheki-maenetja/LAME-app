@@ -40,6 +40,7 @@ def save_files(f_names, f_contents):
         try:
             raw_text = get_raw_text(f_name, extension)
         except:
+            clear_folders()
             return False
 
         if raw_text is not None:
@@ -55,13 +56,16 @@ def save_files(f_names, f_contents):
             type="upload"
         )
     
+    clear_folders()
+
+    return True
+
+def clear_folders():
     for file in os.listdir("temp"):
         os.remove(os.path.join("temp", file))
     
     for file in os.listdir("raw_files"):
         os.remove(os.path.join("raw_files", file))
-    
-    return True
 
 def get_raw_text(f_name, extension):
     if extension == ".pdf":
