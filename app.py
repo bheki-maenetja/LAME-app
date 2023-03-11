@@ -249,10 +249,60 @@ def get_info_extraction_section():
             className="no-docs-heading"
         )
 
+    docs_copy = docs.copy(deep=True)
+
+    doc_list = docs_copy["title"]
     return html.Div(
-        id="info-extraction-section",
+        id="info-extract-section",
         children=[
-            html.H3("Information Extraction")
+            html.Div(
+                id="info-extract-params",
+                children=[
+                    html.Div(children=[html.H3("Select Documents"),
+                    dcc.Dropdown(
+                        id="info-extract-doc-select",
+                        options=doc_list,
+                        multi=True,
+                        placeholder="Select documents..."
+                    )]),
+                    html.Div(children=[html.H3("Select Extraction Method"),
+                    dcc.Dropdown(
+                        id="info-extract-method-select",
+                        options=[
+                            "TF-IDF", 
+                            "Cosine Similarity",
+                            "BERT",
+                            "OpenAI"
+                        ],
+                        value="TF-IDF",
+                        multi=False,
+                        clearable=False,
+                    )]),
+                    html.Div(children=[html.H3("Search Query"),
+                    dbc.Input(
+                        id="info-extract-query",
+                        placeholder="Enter your search query",
+                        value="",
+                        persistence=False,
+                    )]),
+                    html.Button(
+                        id="info-extract-btn",
+                        children="Extract Information",
+                    )
+                ]
+            ),
+            html.Div(
+                id="info-extract-output",
+                children=[
+                    dbc.Textarea(
+                        id="info-extract-output-content",
+                        value="",
+                        draggable=True,
+                        readOnly=True,
+                        placeholder="The results of your query will appear here"
+                    )
+                ]
+            )
         ]
     )
 
