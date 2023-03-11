@@ -60,6 +60,27 @@ def save_files(f_names, f_contents):
 
     return True
 
+def create_new_file(f_name, f_content):
+    try:
+        with open(os.path.join("raw_files", f"{f_name}.txt"), "w") as f:
+            f.write(f_content)
+        
+        cloudinary.uploader.upload(
+            os.path.join("raw_files", f"{f_name}.txt"),
+            display_name=f_name, 
+            folder="LAME_upload",
+            resource_type="auto",
+            tags=["LAME_upload", f_name],
+            type="upload"
+        )
+
+        clear_folders()
+    except:
+        return False
+    
+    return True
+
+
 def clear_folders():
     for file in os.listdir("temp"):
         os.remove(os.path.join("temp", file))
