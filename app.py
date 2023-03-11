@@ -1,5 +1,5 @@
 # Third-Party Imports
-from dash import Dash, html, dcc, ctx
+from dash import Dash, html, dcc, no_update
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 
@@ -30,6 +30,14 @@ app.layout = html.Div(id="main-container", children=[
     dcc.ConfirmDialog(
         id='confirm-save-error',
         message='Error: Your file(s) could not be saved.'
+    ),
+    dcc.ConfirmDialog(
+        id="confirm-new-doc",
+        message="Error: Your new file was saved successfully.\nPress OK to continue"
+    ),
+    dcc.ConfirmDialog(
+        id="confirm-new-doc-error",
+        message=""
     ),
     dcc.ConfirmDialog(
         id='confirm-doc-delete',
@@ -132,7 +140,9 @@ new_doc_modal = html.Div(
                         html.H3("Name"),
                         dbc.Input(
                             id="new-doc-name",
-                            placeholder="Name of new document"
+                            placeholder="Name of new document",
+                            value="",
+                            persistence=False,
                         ),
                         html.Br(),
                         html.H3("Content"),
@@ -140,6 +150,8 @@ new_doc_modal = html.Div(
                             id="new-doc-content",
                             placeholder="Content of new document",
                             draggable=False,
+                            value="",
+                            persistence=False,
                         )
                     ]
                 ),
@@ -404,6 +416,40 @@ def new_doc_handler(n_clicks):
         return True
 
 @app.callback(
+    Output("reload-handler-2", "children"),
+    Output("confirm-new-doc", "displayed"),
+    Output("confirm-new-doc-error", "displayed"),
+    Output("confirm-new-doc-error", "message"),
+    State("new-doc-name", "value"),
+    State("new-doc-content", "value"),
+    Input("new-doc-modal-btn", "n_clicks"),
+)
+def create_doc_handler(doc_name, doc_content, n_clicks):
+    global docs
+
+    if n_clicks is not None:
+        err_messages = [
+            "Please enter a name for your new file.",
+            "Please enter some content for your new file.",
+            "Error: Your document could not be created. Please try again.",
+        ]
+
+        if doc_name.strip() == "" and doc_content.strip() == "":
+            return no_update, False, True, "\n".join(err_messages[:-1])
+        elif doc_name.strip() == "":
+            return no_update, False, True, err_messages[0]
+        elif doc_content.strip() == "":
+            return no_update, False, True, err_messages[1]
+        
+        res = fh.create_new_file(doc_name, doc_content)
+        if not res:
+            return no_update, False, True, err_messages[2]
+        
+        docs = fh.get_documents()
+        return None, True, False, "",
+    return no_update, False, False, ""
+
+@app.callback(
     Output("download-doc", "data"),
     Input("download-doc-btn", "n_clicks"),
     suppress_callback_exceptions=True,
@@ -416,7 +462,7 @@ def doc_download_handler(n_clicks):
             return dict(content=doc_content, filename=f"{doc_title}.txt")
 
 @app.callback(
-    Output("reload-handler-2", "children"),
+    Output("reload-handler-3", "children"),
     Output("confirm-doc-delete", "displayed"),
     Output("confirm-doc-delete-error", "displayed"),
     Input("delete-doc-btn", "n_clicks"),
