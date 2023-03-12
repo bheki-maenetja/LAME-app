@@ -37,11 +37,11 @@ class DocSearcher():
     def __init__(self):
         self._corpus = dict()
         self._file_matches = 2
-        self._sentence_matches = 1
+        self._sentence_matches = 5
         self._bert_model = BertForQuestionAnswering.from_pretrained(
             'bert-large-uncased-whole-word-masking-finetuned-squad'
         )
-        self._bert_tokenizer = BertTokenizer.from_pretrained(
+        self._bert_tokenizer = AutoTokenizer.from_pretrained(
             'bert-large-uncased-whole-word-masking-finetuned-squad'
         )
         self._sent_transformer = SentenceTransformer(
@@ -196,7 +196,7 @@ class DocSearcher():
             )
 
             # Print the answer span
-            print("Answer: ", answer_text)
+            # print("Answer: ", answer_text)
         
         # Generate answer span
         best_answer_ind = -1
@@ -255,7 +255,7 @@ class DocSearcher():
         return joint_context, ranked_sents
 
     def _cosine_similarity(self, text_1, text_2, model):
-        embedding_1= model.encode(text_1, convert_to_tensor=True)
+        embedding_1 = model.encode(text_1, convert_to_tensor=True)
         embedding_2 = model.encode(text_2, convert_to_tensor=True)
     
         return float(util.pytorch_cos_sim(embedding_1, embedding_2))
@@ -333,7 +333,8 @@ class DocSearcher():
         return [(sent, score[0]) for sent, score in ranked_sents]
 
     def _sent_rank_cosine(self, query, context):
-        model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
+        # model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
+        model = self._sent_transformer
         sent_scores = {
             sent: self._cosine_similarity(query, sent, model)
             for sent in nltk.sent_tokenize(context)
