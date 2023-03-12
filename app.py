@@ -8,6 +8,7 @@ import dash_bootstrap_components as dbc
 
 # Local Imports
 from utils import file_handling as fh
+from nlp.info_extraction import DocSearcher
 
 # Global Variables
 app = Dash(name=__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
@@ -19,6 +20,8 @@ UPLOAD_TEXT = "Drag and drop, or click to upload files to storage"
 
 docs = fh.get_documents() # load documents from cloudinary
 current_doc = None
+
+info_extractor = DocSearcher()
 
 # UI Layout
 ## Main App Layout (headings, file saver and file selector)
@@ -296,19 +299,21 @@ def get_info_extraction_section():
             html.Div(
                 id="info-extract-output",
                 children=[
-                    dcc.Loading([
-                        dbc.Textarea(
-                            id="info-extract-output-content",
-                            value="",
-                            draggable=False,
-                            readOnly=True,
-                            placeholder="The results of your query will appear here"
-                        )
-                    ])
-                ]
-            )
-        ]
-    )
+                    dcc.Loading(
+                        color="#003049",
+                        children=[
+                            dbc.Textarea(
+                                id="info-extract-output-content",
+                                value="",
+                                draggable=False,
+                                readOnly=True,
+                                placeholder="The results of your query will appear here"
+                            )
+                        ])
+                    ]
+                )
+            ]
+        )
 
 ### Summary Section
 def get_summary_section():
@@ -549,7 +554,7 @@ def info_extract_params_handler(documents, query):
     return True, "nlp-btn-disabled"
 
 @app.callback(
-    Output("dummy", "children"),
+    Output("info-extract-output-content", "value"),
     State("info-extract-doc-select", "value"),
     State("info-extract-method-select", "value"),
     State("info-extract-query", "value"),
@@ -557,7 +562,20 @@ def info_extract_params_handler(documents, query):
 )
 def info_extract_handler(select_docs, method, query, n_clicks):
     if n_clicks is not None:
-        print(select_docs, method, query)
+        corpus = {
+            doc_name: docs[
+                docs["title"] == doc_name
+            ].to_dict("records")[0]["content"]
+            for doc_name in select_docs
+        }
+        info_extractor.load_files(corpus)
+        try:
+            answer = info_extractor.search(query, method)
+            return answer
+        except Exception as e:
+            print(e)
+            return "Error: Something went wrong."
+    return ""
 
 # Running server
 if __name__ == "__main__":
