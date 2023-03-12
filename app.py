@@ -538,9 +538,11 @@ def doc_delete_handler(n_clicks):
     Output("info-extract-btn", "disabled"),
     Output("info-extract-btn", "className"),
     Input("info-extract-doc-select", "value"),
+    Input("info-extract-query", "value"),
 )
-def select_doc_handler(documents):
-    if documents is not None and len(documents) > 0:
+def info_extract_params_handler(documents, query):
+    if documents is not None and query != "":
+        if query.strip() != "" and len(documents) > 0:
             return False, "nlp-btn"
     return True, "nlp-btn-disabled"
 
