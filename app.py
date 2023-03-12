@@ -288,6 +288,8 @@ def get_info_extraction_section():
                     html.Button(
                         id="info-extract-btn",
                         children="Extract Information",
+                        className="nlp-btn-disabled",
+                        disabled=True,
                     )
                 ]
             ),
@@ -530,6 +532,17 @@ def doc_delete_handler(n_clicks):
         docs = fh.get_documents()
         return None, is_success, not is_success
     return None, False, False
+
+## Info Extraction Page Callbacks
+@app.callback(
+    Output("info-extract-btn", "disabled"),
+    Output("info-extract-btn", "className"),
+    Input("info-extract-doc-select", "value"),
+)
+def select_doc_handler(documents):
+    if documents is not None and len(documents) > 0:
+            return False, "nlp-btn"
+    return True, "nlp-btn-disabled"
 
 # Running server
 if __name__ == "__main__":
