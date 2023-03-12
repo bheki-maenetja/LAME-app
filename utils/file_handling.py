@@ -112,6 +112,7 @@ def get_documents():
         "LAME_upload",
         resource_type="raw",
         tags=True,
+        max_results=500,
     )['resources']
 
     if len(resources) == 0: return None
