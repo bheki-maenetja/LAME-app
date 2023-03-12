@@ -269,12 +269,12 @@ def get_info_extraction_section():
                     dcc.Dropdown(
                         id="info-extract-method-select",
                         options=[
-                            "TF-IDF", 
-                            "Cosine Similarity",
-                            "BERT",
-                            "OpenAI"
+                            {"label": "TF-IDF", "value": "tf-idf"}, 
+                            {"label": "Cosine Similarity", "value": "cosine_sim"},
+                            {"label": "BERT", "value": "bert"},
+                            {"label": "OpenAI", "value": "openai"}
                         ],
-                        value="TF-IDF",
+                        value="tf-idf",
                         multi=False,
                         clearable=False,
                     )]),
@@ -296,13 +296,15 @@ def get_info_extraction_section():
             html.Div(
                 id="info-extract-output",
                 children=[
-                    dbc.Textarea(
-                        id="info-extract-output-content",
-                        value="",
-                        draggable=True,
-                        readOnly=True,
-                        placeholder="The results of your query will appear here"
-                    )
+                    dcc.Loading([
+                        dbc.Textarea(
+                            id="info-extract-output-content",
+                            value="",
+                            draggable=False,
+                            readOnly=True,
+                            placeholder="The results of your query will appear here"
+                        )
+                    ])
                 ]
             )
         ]
@@ -545,6 +547,17 @@ def info_extract_params_handler(documents, query):
         if query.strip() != "" and len(documents) > 0:
             return False, "nlp-btn"
     return True, "nlp-btn-disabled"
+
+@app.callback(
+    Output("dummy", "children"),
+    State("info-extract-doc-select", "value"),
+    State("info-extract-method-select", "value"),
+    State("info-extract-query", "value"),
+    Input("info-extract-btn", "n_clicks"),
+)
+def info_extract_handler(select_docs, method, query, n_clicks):
+    if n_clicks is not None:
+        print(select_docs, method, query)
 
 # Running server
 if __name__ == "__main__":

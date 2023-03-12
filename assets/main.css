@@ -95,6 +95,17 @@ body {
     background-color: var(--paleyellow);
 }
 
+#info-extract-output {
+    border: 0.2em solid var(--darkblue);
+    border-radius: 1em;
+}
+
+#info-extract-output > * {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
 /* Upload Component */
 #upload-data {
     display: flex;
@@ -193,10 +204,10 @@ body {
 #info-extract-output-content {
     flex-grow: 1;
     padding: 1em;
-    border: 0.2em solid var(--darkblue);
+    border: none;
     border-radius: 1em;
     background-color: var(--vanilla);
-    color: var(--darkblue)
+    color: var(--darkblue);
 }
 
 /* Modals */
