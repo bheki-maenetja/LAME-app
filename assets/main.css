@@ -98,12 +98,15 @@ body {
 #info-extract-output {
     border: 0.2em solid var(--darkblue);
     border-radius: 1em;
+    background-color: var(--vanilla);
 }
 
 #info-extract-output > * {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    background-color: var(--vanilla);
+    border-radius: 1em;
 }
 
 /* Upload Component */
