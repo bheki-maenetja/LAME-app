@@ -657,6 +657,28 @@ def info_extract_handler(select_docs, method, query, n_clicks):
             return "Error: Something went wrong."
     return ""
 
+## Summarisation Page Callbacks
+@app.callback(
+    Output("summary-btn", "disabled"),
+    Output("summary-btn", "className"),
+    Input("summary-doc-select", "value"),
+)
+def summary_params_handler(documents):
+    if documents is not None and len(documents) > 0:
+        return False, "nlp-btn"
+    return True, "nlp-btn-disabled"
+
+@app.callback(
+    Output("summary-output-content", "value"),
+    State("summary-doc-select", "value"),
+    State("summary-method-select", "value"),
+    State("summary-size-slider", "value"),
+    Input("summary-btn", "n_clicks"),
+)
+def summary_handler(select_docs, method, summary_size, n_clicks):
+    if n_clicks is not None:
+        return f"Docs: {', '.join(select_docs)}\nMethod: {method}\nSummary size: {summary_size}%"
+
 # Running server
 if __name__ == "__main__":
     app.run_server(debug=True)
