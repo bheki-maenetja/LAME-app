@@ -130,7 +130,9 @@ body {
     align-items: center;
     width: 100%;
     height: 100%;
-    cursor: pointer
+    padding: 2em 0;
+    border-radius: 0.7em;
+    cursor: pointer;
 }
 
 #upload-text {
