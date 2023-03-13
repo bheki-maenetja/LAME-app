@@ -81,7 +81,7 @@ class DocSearcher():
             output_text = self._build_output_text(ranked_sents, 2500)
             answer = self._run_model_openai(query, output_text)
         
-        return answer
+        return answer.strip()
     
     def _build_output_text(self, ranked_sents, max_length=512):
         output_text = ''
