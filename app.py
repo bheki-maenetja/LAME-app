@@ -75,7 +75,7 @@ app.layout = html.Div(id="main-container", children=[
         dcc.Tab(
             className="main-tab",
             selected_className="main-tab-selected",
-            label="Information Extraction", 
+            label="Question Answering", 
             value="info-extraction"
         ),
         dcc.Tab(
@@ -246,7 +246,7 @@ def get_doc_section():
 ### Info Extraction Section
 def get_info_extraction_section():
     if docs is None:
-        text = "Please upload documents to get started with information extraction."
+        text = "Please upload documents to get started with question answering."
         return html.H2(
             children=text,
             className="no-docs-heading"
@@ -268,29 +268,29 @@ def get_info_extraction_section():
                         multi=True,
                         placeholder="Select documents..."
                     )]),
-                    html.Div(children=[html.H3("Select Extraction Method"),
+                    html.Div(children=[html.H3("Method"),
                     dcc.Dropdown(
                         id="info-extract-method-select",
                         options=[
                             {"label": "TF-IDF", "value": "tf-idf"}, 
                             {"label": "Cosine Similarity", "value": "cosine_sim"},
-                            {"label": "BERT", "value": "bert"},
+                            {"label": "BERT", "value": "bert2"},
                             {"label": "OpenAI", "value": "openai"}
                         ],
                         value="tf-idf",
                         multi=False,
                         clearable=False,
                     )]),
-                    html.Div(children=[html.H3("Search Query"),
+                    html.Div(children=[html.H3("Question"),
                     dbc.Input(
                         id="info-extract-query",
-                        placeholder="Enter your search query",
+                        placeholder="Enter your question here",
                         value="",
                         persistence=False,
                     )]),
                     html.Button(
                         id="info-extract-btn",
-                        children="Extract Information",
+                        children="Answer Question",
                         className="nlp-btn-disabled",
                         disabled=True,
                     )
