@@ -202,7 +202,7 @@ body {
     color: var(--darkblue)
 }
 
-#info-extract-doc-select *, #info-extract-method-select * {
+#info-extract-doc-select *, #info-extract-method-select *, #summary-doc-select *, #summary-method-select * {
     color: var(--darkblue)
 }
 
@@ -349,13 +349,13 @@ body {
     color: slategray
 }
 
-.nlp-btn[id="info-extract-btn"] {
+.nlp-btn {
     border: 0.2em solid var(--darkblue);
     background-color: var(--orange);
     color: white;
 }
 
-.nlp-btn[id="info-extract-btn"]:hover {
+.nlp-btn:hover {
     border-color: var(--orange);
     background-color: var(--darkblue);
     color: var(--orange)
