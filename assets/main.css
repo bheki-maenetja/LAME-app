@@ -208,6 +208,7 @@ body {
 
 #info-extract-output-content, #summary-output-content {
     flex-grow: 1;
+    overflow-y: scroll;
     padding: 1em;
     border: none;
     border-radius: 1em;
