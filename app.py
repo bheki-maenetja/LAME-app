@@ -9,6 +9,7 @@ import dash_bootstrap_components as dbc
 # Local Imports
 from utils import file_handling as fh
 from nlp.info_extraction import DocSearcher
+from nlp.summarisation import DocSummariser
 
 # Global Variables
 app = Dash(name=__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
@@ -22,6 +23,7 @@ docs = fh.get_documents() # load documents from cloudinary
 current_doc = None
 
 info_extractor = DocSearcher()
+doc_summariser = DocSummariser()
 
 # UI Layout
 ## Main App Layout (headings, file saver and file selector)
@@ -339,7 +341,7 @@ def get_summary_section():
                             dcc.Dropdown(
                                 id="summary-doc-select",
                                 options=doc_list,
-                                multi=True,
+                                multi=False,
                                 placeholder="Select documents..."
                             )
                         ]
@@ -352,7 +354,7 @@ def get_summary_section():
                                 options=[
                                     {"label": "Simple Extractive", "value": "se"}, 
                                     {"label": "LexRank", "value": "lexR"},
-                                    {"label": "TextRank", "value": "textR"},
+                                    {"label": "TextRank", "value": "texR"},
                                     {"label": "Latent Semenatic Analysis", "value": "lsa"},
                                     {"label": "Luhn's Algorithm", "value": "luhn"},
                                     {"label": "BART", "value": "bart"},
@@ -674,9 +676,26 @@ def summary_params_handler(documents):
     State("summary-size-slider", "value"),
     Input("summary-btn", "n_clicks"),
 )
-def summary_handler(select_docs, method, summary_size, n_clicks):
+def summary_handler(select_doc, method, summary_size, n_clicks):
     if n_clicks is not None:
-        return f"Docs: {', '.join(select_docs)}\nMethod: {method}\nSummary size: {summary_size}%"
+        corpus = {
+            select_doc: docs[
+                docs["title"] == select_doc
+            ].to_dict("records")[0]["content"]
+        }
+        try:
+            doc_summariser.load_files(corpus)
+            summary = doc_summariser.summarise(
+                method, 
+                [select_doc], 
+                summary_size/100
+            )
+            doc_summariser.clear_files()
+            return summary if summary.strip() != "" else "[SUMMARY SIZE TO SMALL]"
+        except Exception as e:
+            print(e)
+            return "Error: Something went wrong."
+    return ""
 
 # Running server
 if __name__ == "__main__":
