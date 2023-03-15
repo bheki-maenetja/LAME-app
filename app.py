@@ -651,6 +651,7 @@ def info_extract_handler(select_docs, method, query, n_clicks):
         info_extractor.load_files(corpus)
         try:
             answer = info_extractor.search(query, method)
+            info_extractor.clear_files()
             return answer
         except Exception as e:
             print(e)
