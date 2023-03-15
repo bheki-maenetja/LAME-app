@@ -356,8 +356,6 @@ def get_summary_section():
                                     {"label": "Latent Semenatic Analysis", "value": "lsa"},
                                     {"label": "Luhn's Algorithm", "value": "luhn"},
                                     {"label": "BART", "value": "bart"},
-                                    {"label": "T5", "value": "t5"},
-                                    {"label": "Longformer", "value": "longf"},
                                     {"label": "OpenAI", "value": "openai"},
                                 ],
                                 value="se",
