@@ -149,9 +149,12 @@ class DocSummariser():
 
         data = json.dumps(payload)
         res = req.request("POST", api_url, headers=headers, data=data)
-        text = json.loads(res.content.decode("utf-8"))[0]["summary_text"]
-        
-        return text
+        content = json.loads(res.content.decode("utf-8"))
+
+        if isinstance(content, dict):
+            return content.get("error", "Something's wrong") + "\n"
+        elif isinstance(content, list):
+            return content[0].get("summary_text")
     
     def _openai_summary(self, text, summary_size=0.5):
         word_len = len(nltk.word_tokenize(text))
