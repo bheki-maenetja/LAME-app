@@ -56,9 +56,8 @@ body {
 }
 
 #section-container {
-    min-height: fit-content;
     flex-grow: 1;
-    overflow-y: scroll;
+    max-height: 65vh;
     padding: 0;
     border: 0.25em solid var(--darkblue);
     border-radius: 1em;
@@ -206,6 +205,12 @@ body {
 }
 
 /* Accordions */
+#doc-accord-container {
+    height: 89.5%;
+    overflow-y: scroll;
+    border-radius: 0 0 0.5em 0.5em;
+}
+
 .doc-accord-item * {
     background-color: var(--darkblue);
     color: white;
