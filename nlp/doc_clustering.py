@@ -105,8 +105,7 @@ def doc_clustering(corpus, num_clusters=2):
     kmeans.fit(X)
     
     # Principal components
-    min_x = min(X.shape)
-    num_comps = min(min_x, 3)
+    num_comps = 3 if num_clusters > 2 else 2
 
     pca = PCA(n_components=num_comps)
     prin_comps = pca.fit_transform(X.toarray())
