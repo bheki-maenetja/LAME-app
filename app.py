@@ -12,6 +12,7 @@ import plotly.graph_objects as go
 from utils import file_handling as fh
 from nlp.info_extraction import DocSearcher
 from nlp.summarisation import DocSummariser
+import nlp.doc_clustering as dc
 
 # Global Variables
 app = Dash(name=__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
@@ -40,11 +41,11 @@ app.layout = html.Div(id="main-container", children=[
     ),
     dcc.ConfirmDialog(
         id="confirm-new-doc",
-        message="Error: Your new file was saved successfully.\nPress OK to continue"
+        message="Your new file was saved successfully.\nPress OK to continue"
     ),
     dcc.ConfirmDialog(
         id="confirm-new-doc-error",
-        message=""
+        message="Error: Your file(s) could not be saved."
     ),
     dcc.ConfirmDialog(
         id='confirm-doc-delete',
@@ -218,31 +219,36 @@ def get_doc_section():
                     ),
                 ]
             ),
-            dbc.Accordion(
-                id="doc-accord",
+            html.Div(
+                id="doc-accord-container",
                 children=[
-                    dbc.AccordionItem(
-                        id=doc["public_id"],
-                        item_id=doc["public_id"],
-                        title=doc["title"],
-                        class_name="doc-accord-item",
+                    dbc.Accordion(
+                        id="doc-accord",
                         children=[
-                            html.Div(
-                                className="doc-accord-item-content",
+                            dbc.AccordionItem(
+                                id=doc["public_id"],
+                                item_id=doc["public_id"],
+                                title=doc["title"],
+                                class_name="doc-accord-item",
                                 children=[
-                                    html.P(f"URL: {doc['url']}"),
-                                    html.P("Raw text:"),
-                                    html.P(
-                                        children=doc["content"],
-                                        className="doc-content",
+                                    html.Div(
+                                        className="doc-accord-item-content",
+                                        children=[
+                                            html.P(f"URL: {doc['url']}"),
+                                            html.P("Raw text:"),
+                                            html.P(
+                                                children=doc["content"],
+                                                className="doc-content",
+                                            )
+                                        ]
                                     )
-                                ]
+                                ],
                             )
+                            for doc in docs_copy
                         ],
+                        start_collapsed=True
                     )
-                    for doc in docs_copy
-                ],
-                start_collapsed=True
+                ]
             )
         ]
     )
@@ -415,8 +421,8 @@ def get_summary_section():
 
 ### Clustering Section
 def get_clustering_section():
-    if docs is None:
-        text = "Please upload documents to get started with document clustering."
+    if docs is None or len(docs) < 2:
+        text = "Please upload 2 or more documents to get started with document clustering."
         return html.H2(
             children=text,
             className="no-docs-heading"
@@ -441,12 +447,12 @@ def get_clustering_section():
                         id="clustering-num-select", 
                         options=[
                             {"label": str(i), "value": i}
-                            for i in range(1, len(doc_list) + 1)
+                            for i in range(2, len(doc_list) + 1)
                         ],
                         multi=False,
                         placeholder="Number of clusters",
                         clearable=False,
-                        value=1,
+                        value=2,
                     ),
                     html.Button(
                         id="clustering-btn",
@@ -749,12 +755,12 @@ def summary_handler(select_doc, method, summary_size, n_clicks):
     prevent_initial_call=True,
 )
 def clustering_params(documents):
-    if documents is not None and len(documents) > 0:
+    if documents is not None and len(documents) > 1:
         return False, "nlp-btn"
     return True, "nlp-btn-disabled"
 
 @app.callback(
-    Output("dummy", "children"),
+    Output("clustering-plot", "figure"),
     State("clustering-doc-select", "value"),
     State("clustering-num-select", "value"),
     Input("clustering-btn", "n_clicks"),
@@ -763,7 +769,25 @@ def clustering_params(documents):
 )
 def clustering_handler(select_docs, num_clusters, n_clicks):
     if n_clicks is not None:
-        print(select_docs, num_clusters, n_clicks)
+        corpus = {
+            doc_name: docs[
+                docs["title"] == doc_name
+            ].to_dict("records")[0]["content"]
+            for doc_name in select_docs
+        }
+        true_cluster_num = min(num_clusters, len(select_docs))
+        try:
+            cluster_data, doc_data = dc.doc_clustering(corpus, true_cluster_num)
+            cluster_plot = dc.plot_clusters(
+                doc_data, 
+                cluster_data,
+                "z_coord" in cluster_data
+            )
+            return cluster_plot
+        except Exception as e:
+            print(e)
+            return go.Figure()
+    return go.Figure()
 
 # Running server
 if __name__ == "__main__":
