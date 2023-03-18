@@ -441,16 +441,17 @@ def get_clustering_section():
                         id="clustering-num-select", 
                         options=[
                             {"label": str(i), "value": i}
-                            for i in range(2, len(doc_list) + 1)
+                            for i in range(1, len(doc_list) + 1)
                         ],
                         multi=False,
                         placeholder="Number of clusters",
                         clearable=False,
+                        value=1,
                     ),
                     html.Button(
                         id="clustering-btn",
                         children="Cluster Documents",
-                        className="nlp-btn",
+                        className="nlp-btn-disabled",
                         disabled=True,
                     )
                 ]
@@ -638,9 +639,9 @@ def create_doc_handler(doc_name, doc_content, n_clicks):
 )
 def doc_download_handler(n_clicks):
     if n_clicks is not None and n_clicks > 0 and current_doc is not None:
-            doc_title = current_doc["title"]
-            doc_content = current_doc["content"]
-            return dict(content=doc_content, filename=f"{doc_title}.txt")
+        doc_title = current_doc["title"]
+        doc_content = current_doc["content"]
+        return dict(content=doc_content, filename=f"{doc_title}.txt")
 
 @app.callback(
     Output("reload-handler-3", "children"),
@@ -738,6 +739,31 @@ def summary_handler(select_doc, method, summary_size, n_clicks):
             print(e)
             return "Error: Something went wrong."
     return ""
+
+# Document Clustering Page Callbacks
+@app.callback(
+    Output("clustering-btn", "disabled"),
+    Output("clustering-btn", "className"),
+    Input("clustering-doc-select", "value"),
+    suppress_callback_exceptions=True,
+    prevent_initial_call=True,
+)
+def clustering_params(documents):
+    if documents is not None and len(documents) > 0:
+        return False, "nlp-btn"
+    return True, "nlp-btn-disabled"
+
+@app.callback(
+    Output("dummy", "children"),
+    State("clustering-doc-select", "value"),
+    State("clustering-num-select", "value"),
+    Input("clustering-btn", "n_clicks"),
+    suppress_callback_exceptions=True,
+    prevent_initial_call=True,
+)
+def clustering_handler(select_docs, num_clusters, n_clicks):
+    if n_clicks is not None:
+        print(select_docs, num_clusters, n_clicks)
 
 # Running server
 if __name__ == "__main__":
