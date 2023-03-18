@@ -3,6 +3,8 @@ from dash import Dash, html, dcc, no_update
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 
+import plotly.graph_objects as go
+
 # Standard Imports
 
 
@@ -420,10 +422,50 @@ def get_clustering_section():
             className="no-docs-heading"
         )
 
+    docs_copy = docs.copy(deep=True)
+    doc_list = docs_copy["title"]
+
     return html.Div(
         id="clustering-section",
         children=[
-            html.H3("Document Clustering")
+            html.Div(
+                id="clustering-params",
+                children=[
+                    dcc.Dropdown(
+                        id="clustering-doc-select",
+                        options=doc_list,
+                        multi=True,
+                        placeholder="Select documents..."
+                    ),
+                    dcc.Dropdown(
+                        id="clustering-num-select", 
+                        options=[
+                            {"label": str(i), "value": i}
+                            for i in range(2, len(doc_list) + 1)
+                        ],
+                        multi=False,
+                        placeholder="Number of clusters",
+                        clearable=False,
+                    ),
+                    html.Button(
+                        id="clustering-btn",
+                        children="Cluster Documents",
+                        className="nlp-btn",
+                        disabled=True,
+                    )
+                ]
+            ),
+            html.Div(
+                id="clustering-fig-container",
+                children=[
+                    dcc.Loading([
+                        dcc.Graph(
+                            id="clustering-plot",
+                            figure=go.Figure()
+                        )
+                    ])
+                ]
+            )
         ]
     )
 
