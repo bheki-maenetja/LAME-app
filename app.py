@@ -468,7 +468,7 @@ def get_clustering_section():
                     dcc.Loading([
                         dcc.Graph(
                             id="clustering-plot",
-                            figure=go.Figure()
+                            figure=dc.plot_data()
                         )
                     ])
                 ]
@@ -781,7 +781,7 @@ def clustering_handler(select_docs, num_clusters, n_clicks):
             cluster_plot = dc.plot_clusters(
                 doc_data, 
                 cluster_data,
-                "z_coord" in cluster_data
+                "z_coord" in cluster_data and len(select_docs) > 3
             )
             return cluster_plot
         except Exception as e:

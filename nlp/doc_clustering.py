@@ -32,8 +32,28 @@ def word_tokenize(text, lower_case=False):
 def plot_data(x=None, y=None, z=None, title="", x_label="", y_label="", name="", mode="markers", text="", **traces):
     fig = go.Figure(layout={
         "title": title,
-        "xaxis": {"title": x_label},
-        "yaxis": {"title": y_label}
+        "xaxis": {
+            "title": x_label,
+            "tickformat": ".5f",
+            "color": "#000000",
+        },
+        "yaxis": {
+            "title": y_label,
+            "tickformat": ".5f",
+            "color": "#000000",
+        },
+        "margin": {
+            "pad": 0,
+            "l": 0,
+            "r": 50,
+            "t": 30,
+            "b": 0,
+        },
+        "modebar": {
+            "orientation": "h"
+        },
+        "paper_bgcolor": "#EAE2B7",
+        "font": {"color": "#000000"},
     })
     
     if z is None:
@@ -42,7 +62,8 @@ def plot_data(x=None, y=None, z=None, title="", x_label="", y_label="", name="",
             y=y,
             mode=mode,
             name=name,
-            text=text
+            text=text,
+            textposition="top center",
         )
     else:
         data = go.Scatter3d(
@@ -51,7 +72,8 @@ def plot_data(x=None, y=None, z=None, title="", x_label="", y_label="", name="",
             z=z,
             mode=mode,
             name=name,
-            text=text
+            text=text,
+            textposition="top center",
         )
 
     if x is not None and y is not None:
@@ -70,7 +92,9 @@ def create_trace(x=None, y=None, z=None, name="", mode="lines", text="", marker_
             mode=mode,
             name=name,
             text=text,
-            marker=dict(size=marker_size)
+            marker=dict(size=8),
+            textfont=dict(size=10),
+            textposition="top center",
         )
     else:
         trace = go.Scatter3d(
@@ -80,7 +104,10 @@ def create_trace(x=None, y=None, z=None, name="", mode="lines", text="", marker_
             mode=mode,
             name=name,
             text=text,
-            marker=dict(size=marker_size)
+            marker=dict(size=5),
+            textfont=dict(size=10),
+            textposition="top center",
+            surfacecolor="#EAE2B7"
         )
     
     return trace
@@ -124,7 +151,7 @@ def doc_clustering(corpus, num_clusters=2):
             for idx in top_words_idx
         ]
         cluster_data["name"].append(i)
-        cluster_data["themes"].append(" ".join(top_words))
+        cluster_data["themes"].append(", ".join(top_words))
     
     centroid_comps = pca.fit_transform(kmeans.cluster_centers_)
     
@@ -157,9 +184,9 @@ def plot_clusters(doc_data, cluster_data, is_3d=True):
             y=cluster_points['y_coord'],
             z=z,
             name=cluster_name,
-            mode="markers",
+            mode="markers+text",
             text=cluster_points['doc_name'],
-            marker_size=5
+            marker_size=8,
         )
         traces[cluster_name] = new_trace
     

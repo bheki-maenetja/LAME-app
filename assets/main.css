@@ -90,10 +90,12 @@ body {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    overflow-y: scroll;
+    border-radius: 0 0 0.6em 0.6em;
 }
 
 #clustering-fig-container > * {
-    flex-grow: 1;
+    height: 100%;
 }
 
 #clustering-plot {
