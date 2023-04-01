@@ -15,12 +15,22 @@ from nlp.summarisation import DocSummariser
 import nlp.doc_clustering as dc
 
 # Global Variables
-app = Dash(name=__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
+app = Dash(
+    name=__name__, 
+    external_stylesheets=[
+        dbc.themes.BOOTSTRAP,
+        dbc.icons.BOOTSTRAP, 
+        dbc.icons.FONT_AWESOME,
+    ]
+)
 app.title = "Lexical Analyser Manipulator and Extractor (LAME)"
 
 server = app.server
 
 UPLOAD_TEXT = "Drag and drop, or click to upload files to storage"
+WIKIBOT_TAGLINE = """
+Ask me anything and I'll search Wikipedia's 6m+ articles to find the answer
+"""
 
 docs = fh.get_documents() # load documents from cloudinary
 current_doc = None
@@ -479,9 +489,42 @@ def get_clustering_section():
 ### WikiBot Section
 def get_wiki_bot_section():
     return html.Div(
-        id="wiki-bot-section",
+        id="wikibot-section",
         children=[
-            html.H3("The WikiBot")
+            html.I(
+                id="wikibot-icon", 
+                className="bi bi-wikipedia", 
+                children=[html.Span("ikiBot")],
+            ),
+            html.H3(id="wikibot-tagline", children=WIKIBOT_TAGLINE),
+            html.Div(
+                id="wikibot-params",
+                children=[
+                    dbc.Input(
+                        id="wikibot-query",
+                        placeholder="Enter your question here",
+                        value="",
+                        persistence=False,
+                    ),
+                    dbc.Select(
+                        id="wikibot-method-select",
+                        options=[
+                            {"label": "TF-IDF", "value": "tf-idf"}, 
+                            {"label": "Cosine Similarity", "value": "cosine_sim"},
+                            {"label": "BERT", "value": "bert2"},
+                            {"label": "OpenAI", "value": "openai"}
+                        ],
+                        value="tf-idf",
+                        persistence=False,
+                    ),
+                    html.Button(
+                        id="wikibot-btn",
+                        children="Search",
+                        className="nlp-btn-disabled",
+                        disabled=True,
+                    )
+                ]
+            )
         ]
     )
 
