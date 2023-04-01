@@ -508,13 +508,14 @@ def get_wiki_bot_section():
                     ),
                     dbc.Select(
                         id="wikibot-method-select",
+                        placeholder="Select a Search Method",
                         options=[
                             {"label": "TF-IDF", "value": "tf-idf"}, 
                             {"label": "Cosine Similarity", "value": "cosine_sim"},
                             {"label": "BERT", "value": "bert2"},
                             {"label": "OpenAI", "value": "openai"}
                         ],
-                        value="tf-idf",
+                        value="",
                         persistence=False,
                     ),
                     html.Button(
@@ -522,6 +523,23 @@ def get_wiki_bot_section():
                         children="Search",
                         className="nlp-btn-disabled",
                         disabled=True,
+                    )
+                ]
+            ),
+            html.Div(
+                id="wikibot-output",
+                children=[
+                    dcc.Loading(
+                        color="#003049",
+                        children=[
+                            dbc.Textarea(
+                                id="wikibot-output-content",
+                                value="",
+                                draggable=False,
+                                readOnly=True,
+                                placeholder="The results of your query will appear here"
+                            )
+                        ]
                     )
                 ]
             )
