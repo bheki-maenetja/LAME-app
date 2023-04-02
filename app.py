@@ -13,6 +13,7 @@ from utils import file_handling as fh
 from nlp.info_extraction import DocSearcher
 from nlp.summarisation import DocSummariser
 import nlp.doc_clustering as dc
+from nlp.wikibot import WikiBot
 
 # Global Variables
 app = Dash(
@@ -37,6 +38,7 @@ current_doc = None
 
 info_extractor = DocSearcher()
 doc_summariser = DocSummariser()
+wikibot = WikiBot()
 
 # UI Layout
 ## Main App Layout (headings, file saver and file selector)
@@ -865,7 +867,7 @@ def wikibot_params(query, method):
     return True, "nlp-btn-disabled"
 
 @app.callback(
-    Output("dummy", "children"),
+    Output("wikibot-output-content", "value"),
     State("wikibot-query", "value"),
     State("wikibot-method-select", "value"),
     Input("wikibot-btn", "n_clicks"),
@@ -874,7 +876,13 @@ def wikibot_params(query, method):
 )
 def wikibot_handler(query, method, n_clicks):
     if n_clicks is not None:
-        print(query, method, n_clicks)
+        try:
+            answer = wikibot.search(query, method)
+            return answer
+        except Exception as e:
+            print(e)
+            return f"Error — something went wrong\n{e}"
+    return ""
 
 # Running server
 if __name__ == "__main__":
