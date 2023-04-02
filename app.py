@@ -515,7 +515,7 @@ def get_wiki_bot_section():
                             {"label": "BERT", "value": "bert2"},
                             {"label": "OpenAI", "value": "openai"}
                         ],
-                        value="",
+                        value=None,
                         persistence=False,
                     ),
                     html.Button(
@@ -849,6 +849,32 @@ def clustering_handler(select_docs, num_clusters, n_clicks):
             print(e)
             return go.Figure()
     return go.Figure()
+
+# WikiBot Page Callbacks
+@app.callback(
+    Output("wikibot-btn", "disabled"),
+    Output("wikibot-btn", "className"),
+    Input("wikibot-query", "value"),
+    Input("wikibot-method-select", "value"),
+    suppress_callback_exceptions=True,
+    prevent_initial_call=True,
+)
+def wikibot_params(query, method):
+    if query.strip() != "" and method is not None:
+        return False, "nlp-btn"
+    return True, "nlp-btn-disabled"
+
+@app.callback(
+    Output("dummy", "children"),
+    State("wikibot-query", "value"),
+    State("wikibot-method-select", "value"),
+    Input("wikibot-btn", "n_clicks"),
+    suppress_callback_exceptions=True,
+    prevent_initial_call=True,
+)
+def wikibot_handler(query, method, n_clicks):
+    if n_clicks is not None:
+        print(query, method, n_clicks)
 
 # Running server
 if __name__ == "__main__":
