@@ -96,16 +96,7 @@ class DocSearcher():
         return output_text
     
     def _run_model_bert(self, query, text):
-        # Initialising model
-        # model = BertForQuestionAnswering.from_pretrained(
-        #     'bert-large-uncased-whole-word-masking-finetuned-squad'
-        # )
         model = self._bert_model
-
-        # Initialising tokeniser
-        # tokenizer = AutoTokenizer.from_pretrained(
-        #     'bert-large-uncased-whole-word-masking-finetuned-squad'
-        # )
         tokenizer = self._bert_tokenizer
 
         inputs = tokenizer(
