@@ -148,12 +148,18 @@ body {
     justify-content: space-evenly;
     align-items: center;
     padding: 1em;
-    background-color: rgba(0,0,0, 0.35);
+    background-color: var(--paleyellow);
+}
+
+#clustering-params {
+    border-bottom: 0.2em solid var(--darkblue);
+    border-radius: 0.7em 0.7em 0 0;
 }
 
 #wikibot-params {
-    margin-bottom: 1em;
+    border: 0.2em solid var(--darkblue);
     border-radius: 1em;
+    margin-bottom: 1em;
 }
 
 #info-extract-output, #summary-output, #wikibot-output {
