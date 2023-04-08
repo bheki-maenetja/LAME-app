@@ -360,20 +360,30 @@ body {
 }
 
 #doc-btn-container > * {
-    width: 33.3%;
+    width: 25%;
     padding: 0.35em;
     border-radius: 0.5em;
     font-weight: 900;
 }
 
 #download-doc-btn {
-    margin: 0em 0.5em 0em 0.5em;
+    margin: 0em 0.5em 0em 0.25em;
+}
+
+#edit-doc-btn {
+    margin: 0em 0.25em 0em 0.5em
 }
 
 .doc-btn[id="new-doc-btn"] {
     border: 0.15em solid var(--darkblue);
     background-color: var(--paleyellow);
     color: var(--darkblue);
+}
+
+.doc-btn[id="edit-doc-btn"] {
+    border: 0.15em solid var(--vanilla);
+    background-color: var(--orange);
+    color: var(--vanilla);
 }
 
 .doc-btn[id="download-doc-btn"] {
@@ -392,6 +402,12 @@ body {
     border-color: var(--paleyellow);
     background-color: var(--darkblue);
     color: var(--paleyellow);
+}
+
+.doc-btn[id="edit-doc-btn"]:hover {
+    border-color: var(--orange);
+    background-color: var(--vanilla);
+    color: var(--orange);
 }
 
 .doc-btn[id="download-doc-btn"]:hover {
