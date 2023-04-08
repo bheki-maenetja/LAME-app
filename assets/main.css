@@ -305,7 +305,7 @@ body {
     color: var(--paleyellow);
 }
 
-#new-doc-modal-header button, #edic-doc-modal-header button {
+#new-doc-modal-header button, #edit-doc-modal-header button {
     background-color: white;
 }
 
