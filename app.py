@@ -193,6 +193,56 @@ new_doc_modal = html.Div(
     ],
 )
 
+edit_doc_modal = html.Div(
+    [
+        dbc.Modal(
+            [
+                dbc.ModalHeader(
+                    id="edit-doc-modal-header",
+                    children=dbc.ModalTitle(
+                        id="edit-doc-modal-heading",
+                        children="New Document",
+                    ),
+                ),
+                dbc.ModalBody(
+                    id="edit-doc-modal-body",
+                    children=[
+                        html.H3("Name"),
+                        dbc.Input(
+                            id="edit-doc-name",
+                            placeholder="Name of document",
+                            value="",
+                            persistence=False,
+                        ),
+                        html.Br(),
+                        html.H3("Content"),
+                        dbc.Textarea(
+                            id="edit-doc-content",
+                            placeholder="Content of document",
+                            draggable=False,
+                            value="",
+                            persistence=False,
+                        )
+                    ]
+                ),
+                dbc.ModalFooter(
+                    id="edit-doc-modal-footer",
+                    children=[
+                        dbc.Button(
+                            id="edit-doc-modal-btn",
+                            children="Save Document",
+                        )
+                    ]
+                ),
+            ],
+            id="edit-doc-modal",
+            keyboard=False,
+            backdrop="static",
+            fullscreen=True,
+        ),
+    ],
+)
+
 def get_doc_section():
     if docs is None:
         text = "No documents to display. Upload documents to get started."
@@ -207,6 +257,7 @@ def get_doc_section():
         id="doc-section",
         children=[
             new_doc_modal,
+            edit_doc_modal,
             html.Div(
                 id="doc-btn-container",
                 children=[
@@ -691,6 +742,25 @@ def accordion_handler(item_id):
 def new_doc_handler(n_clicks):
     if n_clicks is not None:
         return True
+    
+@app.callback(
+    Output("edit-doc-modal", "is_open"),
+    Output("edit-doc-modal-heading", "children"),
+    Output("edit-doc-name", "value"),
+    Output("edit-doc-content", "value"),
+    Input("edit-doc-btn", "n_clicks"),
+    suppress_callback_exceptions=True,
+    prevent_initial_call=True,
+)
+def edit_doc_handler(n_clicks):
+    global current_doc
+    if n_clicks is not None:
+        return (
+            True, 
+            current_doc["title"], 
+            current_doc["title"], 
+            current_doc["content"]
+        )
 
 @app.callback(
     Output("reload-handler-2", "children"),

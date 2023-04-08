@@ -299,17 +299,17 @@ body {
 }
 
 /* Modals */
-#new-doc-modal-header {
+#new-doc-modal-header, #edit-doc-modal-header {
     border: none;
     background-color: var(--darkblue);
     color: var(--paleyellow);
 }
 
-#new-doc-modal-header button {
+#new-doc-modal-header button, #edic-doc-modal-header button {
     background-color: white;
 }
 
-#new-doc-modal-body {
+#new-doc-modal-body, #edit-doc-modal-body {
     display: flex;
     flex-direction: column;
     border: none;
@@ -317,16 +317,16 @@ body {
     color: var(--darkblue);
 }
 
-#new-doc-name, #new-doc-content {
+#new-doc-name, #new-doc-content, #edit-doc-name, #edit-doc-content {
     background-color: var(--vanilla);
     color: var(--darkblue);
 }
 
-#new-doc-content {
+#new-doc-content, #edit-doc-content {
     flex-grow: 1;
 }
 
-#new-doc-modal-footer {
+#new-doc-modal-footer, #edit-doc-modal-footer {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -334,7 +334,7 @@ body {
     border: none;
 }
 
-#new-doc-modal-btn {
+#new-doc-modal-btn, #edit-doc-modal-btn {
     width: 50%;
     border: 0.2em solid var(--darkblue);
     background-color: var(--paleyellow);
@@ -342,7 +342,7 @@ body {
     font-weight: 900;
 }
 
-#new-doc-modal-btn:hover {
+#new-doc-modal-btn:hover, #edot-doc-modal-btn:hover {
     border-color: var(--paleyellow);
     background-color: var(--darkblue);
     color: var(--paleyellow);
