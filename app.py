@@ -217,6 +217,12 @@ def get_doc_section():
                         disabled=False,
                     ),
                     html.Button(
+                        id="edit-doc-btn",
+                        className="doc-btn-disabled", 
+                        children="Edit Document",
+                        disabled=True,
+                    ),
+                    html.Button(
                         id="download-doc-btn",
                         className="doc-btn-disabled", 
                         children="Download Raw Text",
@@ -639,6 +645,8 @@ def main_tabs_handler(value): return None
 @app.callback(
     Output("new-doc-btn", "className"),
     Output("new-doc-btn", "disabled"),
+    Output("edit-doc-btn", "className"),
+    Output("edit-doc-btn", "disabled"),
     Output("download-doc-btn", "className"),
     Output("download-doc-btn", "disabled"),
     Output("delete-doc-btn", "className"),
@@ -651,10 +659,28 @@ def accordion_handler(item_id):
     global current_doc
     if item_id is not None:
         current_doc = docs[docs["public_id"] == item_id].to_dict('records')[0]
-        return "doc-btn-disabled", True, "doc-btn", False, "doc-btn", False
+        return (
+            "doc-btn-disabled", 
+            True, 
+            "doc-btn",
+            False,
+            "doc-btn", 
+            False, 
+            "doc-btn", 
+            False
+        )
     elif item_id is None:
         current_doc = None
-        return "doc-btn", False, "doc-btn-disabled", True, "doc-btn-disabled", True
+        return (
+            "doc-btn", 
+            False,
+            "doc-btn-disabled",
+            True, 
+            "doc-btn-disabled", 
+            True, 
+            "doc-btn-disabled", 
+            True
+        )
 
 @app.callback(
     Output("new-doc-modal", "is_open"),
