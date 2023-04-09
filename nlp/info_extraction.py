@@ -18,15 +18,18 @@ from math import log1p, inf
 # Local Imports
 
 # Tokenization
-def tokenize(doc):
+def tokenize(doc, remove_stopwords=True):
     """
     Given a document (represented as a string), return a list of all of the
     words in that document, in order.
     Process document by coverting all words to lowercase, and removing any
     punctuation or English stopwords.
     """
-    banned = list(punctuation) + nltk.corpus.stopwords.words("english")
-
+    banned = list(punctuation)
+    
+    if remove_stopwords:
+        banned += nltk.corpus.stopwords.words("english")
+    
     return [
         w.lower() for w in nltk.word_tokenize(doc)
         if w.lower() not in banned
