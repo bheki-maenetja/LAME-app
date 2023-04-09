@@ -1,6 +1,7 @@
 # Third-Party Imports
 import torch
 import nltk
+nltk.download("punkt")
 from transformers import BertForQuestionAnswering, AutoModelForQuestionAnswering, BertTokenizer, AutoTokenizer
 from sentence_transformers import SentenceTransformer, util
 
