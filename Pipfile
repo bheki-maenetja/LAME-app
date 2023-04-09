@@ -24,6 +24,7 @@ pypdf2 = "*"
 docx2txt = "*"
 cloudinary = "*"
 dash-bootstrap-components = "*"
+gunicorn = "*"
 
 [dev-packages]
 
