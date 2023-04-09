@@ -67,7 +67,8 @@ packaging==23.0
 pandas==2.0.0
 pathy==0.10.1
 pcodedmp==1.2.6
-pdfminer.six==20221105
+pdfminer.six
+# pdfminer.six==20221105
 Pillow==9.5.0
 plotly==5.14.1
 preshed==3.0.8
