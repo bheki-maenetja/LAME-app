@@ -11,7 +11,7 @@ spacy = "*"
 requests = "*"
 beautifulsoup4 = "*"
 transformers = "*"
-torch = {file = "https://download.pytorch.org/whl/cpu/torch-1.11.0%2Bcpu-cp310-cp310-win_amd64.whl"}
+torch = "*"
 sentence-transformers = "*"
 openai = "*"
 python-dotenv = "*"
