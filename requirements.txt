@@ -130,6 +130,8 @@ XlsxWriter==3.0.8
 yarl==1.8.2
 zipp==3.15.0
 
-https://download.pytorch.org/whl/cpu/torch-1.11.0%2Bcpu-cp310-cp310-linux_x86_64.whl#egg=torch
+# https://download.pytorch.org/whl/cpu/torch-1.11.0%2Bcpu-cp310-cp310-linux_x86_64.whl#egg=torch
+https://download.pytorch.org/whl/cpu/torch-2.0.0%2Bcpu-cp39-cp39-linux_x86_64.whl#egg=torch
 
-https://download.pytorch.org/whl/cpu/torchvision-0.12.0%2Bcpu-cp310-cp310-linux_x86_64.whl#egg=torchvision
+# https://download.pytorch.org/whl/cpu/torchvision-0.12.0%2Bcpu-cp310-cp310-linux_x86_64.whl#egg=torchvision
+https://download.pytorch.org/whl/cpu/torchvision-0.15.1%2Bcpu-cp39-cp39-linux_x86_64.whl#egg=torchvision
