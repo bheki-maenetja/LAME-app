@@ -2,7 +2,7 @@
 import spacy
 import nltk
 from nltk.stem import WordNetLemmatizer
-nltk.download("wordnet")
+# nltk.download("wordnet")
 import wikipediaapi
 import requests as r
 from bs4 import BeautifulSoup
