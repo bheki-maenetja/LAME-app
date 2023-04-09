@@ -311,7 +311,8 @@ def get_doc_section():
                                     html.Div(
                                         className="doc-accord-item-content",
                                         children=[
-                                            html.P(f"URL: {doc['url']}"),
+                                            html.P(f"Word count: {doc['word_count']}"),
+                                            html.P(f"Character count: {doc['char_count']}"),
                                             html.P("Raw text:"),
                                             html.P(
                                                 children=doc["content"],

@@ -3,6 +3,12 @@ Styling for the app.
 To find out more about styling go to https://dash.plotly.com/external-resources
 */
 
+/* Imports */
+@import url('https://fonts.googleapis.com/css2?family=Poiret+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+/* Universal Styling */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -29,6 +35,12 @@ body {
     justify-content: center;
     align-items: center;
     width: 100%;
+    padding-bottom: 0.3em;
+    border-bottom: 0.05em solid var(--darkblue);
+    font-family: 'Poiret One', cursive;
+    font-weight: 900;
+    font-size: 3em;
+    color: var(--darkblue)
 }
 
 .no-docs-heading {
@@ -44,6 +56,14 @@ body {
 
 #wikibot-tagline {
     text-align: center;
+    font-family: 'Raleway', sans-serif;
+    font-family: 700;
+    color: var(--darkblue);
+}
+
+#new-doc-modal-heading, #edit-doc-modal-heading {
+    font-family: 'Raleway', sans-serif;
+    font-family: 700;
 }
 
 /* Containers */
@@ -143,6 +163,11 @@ body {
     background-color: var(--paleyellow);
 }
 
+#info-extract-params > div > h3, #summary-params > div > h3 {
+    font-family: 'Raleway', sans-serif;
+    font-family: 700;
+}
+
 #clustering-params, #wikibot-params {
     display: flex;
     justify-content: space-evenly;
@@ -205,6 +230,8 @@ body {
 #upload-text {
     width: 100%;
     height: 100%;
+    font-family: 'Comfortaa', cursive;
+    font-weight: 900;
 }
 
 #upload-data:hover {
@@ -222,6 +249,11 @@ body {
     border: 0.1em solid var(--orange);
     /* border-radius: 1em 1em 0 0; */
     background-color: var(--paleyellow);
+}
+
+.main-tab * {
+    font-family: 'Comfortaa', cursive;
+    font-weight: 700;
 }
 
 #main-tabs .main-tab:first-child {
@@ -317,6 +349,11 @@ body {
     color: var(--darkblue);
 }
 
+#new-doc-modal-body > h3, #edit-doc-modal-body > h3 {
+    font-family: 'Raleway', sans-serif;
+    font-family: 700;
+}
+
 #new-doc-name, #new-doc-content, #edit-doc-name, #edit-doc-content {
     background-color: var(--vanilla);
     color: var(--darkblue);
@@ -339,10 +376,11 @@ body {
     border: 0.2em solid var(--darkblue);
     background-color: var(--paleyellow);
     color: var(--darkblue);
+    font-family: 'Comfortaa', cursive;
     font-weight: 900;
 }
 
-#new-doc-modal-btn:hover, #edot-doc-modal-btn:hover {
+#new-doc-modal-btn:hover, #edit-doc-modal-btn:hover {
     border-color: var(--paleyellow);
     background-color: var(--darkblue);
     color: var(--paleyellow);
@@ -372,6 +410,11 @@ body {
 
 #edit-doc-btn {
     margin: 0em 0.25em 0em 0.5em
+}
+
+.doc-btn, .doc-btn-disabled {
+    font-family: 'Comfortaa', cursive;
+    font-weight: 700;
 }
 
 .doc-btn[id="new-doc-btn"] {
@@ -438,8 +481,9 @@ body {
 
 .nlp-btn, .nlp-btn-disabled {
     padding: 1em 0;
-    font-weight: 900;
     border-radius: 1em;
+    font-family: 'Comfortaa', cursive;
+    font-weight: 900;
 }
 
 .nlp-btn-disabled {
@@ -469,6 +513,8 @@ body {
 #wikibot-icon {
     font-size: 5em;
     text-align: center;
+    color: var(--paleyellow);
+    text-shadow: 0px 0px 0.08em black;
 }
 
 #wikibot-icon span {
