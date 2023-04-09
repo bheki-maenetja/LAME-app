@@ -41,9 +41,9 @@ docs = pd.read_csv("cache/docs.csv")
 # print(new_docs.columns)
 current_doc = None
 
-info_extractor = DocSearcher()
-doc_summariser = DocSummariser()
-wikibot = WikiBot()
+# info_extractor = DocSearcher()
+# doc_summariser = DocSummariser()
+# wikibot = WikiBot()
 
 # UI Layout
 ## Main App Layout (headings, file saver and file selector)
@@ -906,6 +906,7 @@ def info_extract_params_handler(documents, query):
 )
 def info_extract_handler(select_docs, method, query, n_clicks):
     if n_clicks is not None:
+        info_extractor = DocSearcher()
         corpus = {
             doc_name: docs[
                 docs["title"] == doc_name
@@ -942,6 +943,7 @@ def summary_params_handler(documents):
 )
 def summary_handler(select_doc, method, summary_size, n_clicks):
     if n_clicks is not None:
+        doc_summariser = DocSummariser()
         corpus = {
             select_doc: docs[
                 docs["title"] == select_doc
@@ -1028,6 +1030,7 @@ def wikibot_params(query, method):
 )
 def wikibot_handler(query, method, n_clicks):
     if n_clicks is not None:
+        wikibot = WikiBot()
         try:
             answer = wikibot.search(query, method)
             return answer
