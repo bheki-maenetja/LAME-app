@@ -5,6 +5,8 @@ import dash_bootstrap_components as dbc
 
 import plotly.graph_objects as go
 
+import pandas as pd
+
 # Standard Imports
 
 
@@ -33,7 +35,10 @@ WIKIBOT_TAGLINE = """
 Ask me anything and I'll search Wikipedia's 6m+ articles to find the answer
 """
 
-docs = fh.get_documents() # load documents from cloudinary
+# docs = fh.get_documents() # load documents from cloudinary
+# docs.to_csv("cache/docs.csv")
+docs = pd.read_csv("cache/docs.csv")
+# print(new_docs.columns)
 current_doc = None
 
 info_extractor = DocSearcher()
