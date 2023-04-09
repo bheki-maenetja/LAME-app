@@ -2,6 +2,7 @@
 import torch
 import nltk
 nltk.download("punkt")
+nltk.download("stopwords")
 from transformers import BertForQuestionAnswering, AutoModelForQuestionAnswering, BertTokenizer, AutoTokenizer
 from sentence_transformers import SentenceTransformer, util
 
