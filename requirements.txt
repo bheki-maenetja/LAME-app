@@ -112,8 +112,8 @@ textract==1.6.5
 thinc==8.1.9
 threadpoolctl==3.1.0
 tokenizers==0.13.3
-torch==2.0.0
-torchvision==0.15.1
+# torch==2.0.0
+# torchvision==0.15.1
 tqdm==4.65.0
 transformers==4.27.4
 typer==0.7.0
@@ -129,3 +129,7 @@ xlrd==1.2.0
 XlsxWriter==3.0.8
 yarl==1.8.2
 zipp==3.15.0
+
+https://download.pytorch.org/whl/cpu/torch-1.11.0%2Bcpu-cp310-cp310-linux_x86_64.whl#egg=torch
+
+https://download.pytorch.org/whl/cpu/torchvision-0.12.0%2Bcpu-cp310-cp310-linux_x86_64.whl#egg=torchvision
