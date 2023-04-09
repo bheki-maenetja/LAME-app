@@ -38,7 +38,8 @@ google-api-core==2.11.0
 google-auth-oauthlib==1.0.0
 googleapis-common-protos==1.58.0
 gunicorn==20.1.0
-httplib2==0.21.0
+httplib2
+# httplib2==0.21.0
 huggingface-hub==0.13.4
 idna==3.4
 IMAPClient==2.1.0
@@ -76,7 +77,8 @@ pycountry==22.3.5
 pycparser==2.21
 pycryptodome==3.17
 pydantic==1.10.7
-pyparsing==3.0.9
+pyparsing
+# pyparsing==3.0.9
 PyPDF2==3.0.1
 pyquery==2.0.0
 python-dateutil==2.8.2
