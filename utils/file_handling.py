@@ -123,8 +123,8 @@ def get_documents():
         res = req.get(url)
         r["content"] = res.text
         r["title"] = next(t for t in r["tags"] if t != "LAME_upload")
-        r["word_count"] = len(tokenize(res.text, False))
-        r["char_count"] = len(res.text)
+        # r["word_count"] = len(tokenize(res.text, False))
+        # r["char_count"] = len(res.text)
     
     doc_df = pd.DataFrame.from_dict(resources)
     doc_df.sort_values("title", inplace=True, key=lambda x: x.str.lower())

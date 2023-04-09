@@ -10,7 +10,7 @@ import plotly.graph_objects as go
 
 # Local Imports
 from utils import file_handling as fh
-from nlp.info_extraction import DocSearcher
+from nlp.info_extraction import DocSearcher, tokenize
 from nlp.summarisation import DocSummariser
 import nlp.doc_clustering as dc
 from nlp.wikibot import WikiBot
@@ -311,8 +311,10 @@ def get_doc_section():
                                     html.Div(
                                         className="doc-accord-item-content",
                                         children=[
-                                            html.P(f"Word count: {doc['word_count']}"),
-                                            html.P(f"Character count: {doc['char_count']}"),
+                                            # html.P(f"Word count: {doc['word_count']}"),
+                                            # html.P(f"Character count: {doc['char_count']}"),
+                                            html.P(f"Word count: {len(tokenize(doc['content'], False))}"),
+                                            html.P(f"Character count: {len(doc['content'])}"),
                                             html.P("Raw text:"),
                                             html.P(
                                                 children=doc["content"],
