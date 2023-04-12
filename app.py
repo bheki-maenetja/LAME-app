@@ -30,20 +30,20 @@ app.title = "Lexical Analyser Manipulator and Extractor (LAME)"
 
 server = app.server
 
-UPLOAD_TEXT = "Drag and drop, or click to upload files to storage"
+UPLOAD_TEXT = "Drag and drop, or click to upload files"
 WIKIBOT_TAGLINE = """
 Ask me anything and I'll search Wikipedia's 6m+ articles to find the answer
 """
 
-# docs = fh.get_documents() # load documents from cloudinary
+docs = fh.get_documents() # load documents from cloudinary
 # docs.to_csv("cache/docs.csv")
-docs = pd.read_csv("cache/docs.csv")
+# docs = pd.read_csv("cache/docs.csv")
 # print(new_docs.columns)
 current_doc = None
 
-# info_extractor = DocSearcher()
-# doc_summariser = DocSummariser()
-# wikibot = WikiBot()
+info_extractor = DocSearcher()
+doc_summariser = DocSummariser()
+wikibot = WikiBot()
 
 # UI Layout
 ## Main App Layout (headings, file saver and file selector)
@@ -99,13 +99,13 @@ app.layout = html.Div(id="main-container", children=[
         dcc.Tab(
             className="main-tab",
             selected_className="main-tab-selected",
-            label="My Documents", 
+            label="Documents", 
             value="docs"
         ),
         dcc.Tab(
             className="main-tab",
             selected_className="main-tab-selected",
-            label="Question Answering", 
+            label="Information Extraction", 
             value="info-extraction"
         ),
         dcc.Tab(
@@ -117,7 +117,7 @@ app.layout = html.Div(id="main-container", children=[
         dcc.Tab(
             className="main-tab",
             selected_className="main-tab-selected",
-            label="Clustering", 
+            label="Semantic Visualisation", 
             value="clustering"
         ),
         dcc.Tab(
@@ -316,10 +316,10 @@ def get_doc_section():
                                     html.Div(
                                         className="doc-accord-item-content",
                                         children=[
-                                            # html.P(f"Word count: {doc['word_count']}"),
-                                            # html.P(f"Character count: {doc['char_count']}"),
-                                            html.P(f"Word count: {len(tokenize(doc['content'], False))}"),
-                                            html.P(f"Character count: {len(doc['content'])}"),
+                                            html.P(f"Word count: {doc['word_count']}"),
+                                            html.P(f"Character count: {doc['char_count']}"),
+                                            # html.P(f"Word count: {len(tokenize(doc['content'], False))}"),
+                                            # html.P(f"Character count: {len(doc['content'])}"),
                                             html.P("Raw text:"),
                                             html.P(
                                                 children=doc["content"],
@@ -376,16 +376,16 @@ def get_info_extraction_section():
                         multi=False,
                         clearable=False,
                     )]),
-                    html.Div(children=[html.H3("Question"),
+                    html.Div(children=[html.H3("Query"),
                     dbc.Input(
                         id="info-extract-query",
-                        placeholder="Enter your question here",
+                        placeholder="Enter your query here",
                         value="",
                         persistence=False,
                     )]),
                     html.Button(
                         id="info-extract-btn",
-                        children="Answer Question",
+                        children="Extract Info",
                         className="nlp-btn-disabled",
                         disabled=True,
                     )
@@ -541,7 +541,7 @@ def get_clustering_section():
                     ),
                     html.Button(
                         id="clustering-btn",
-                        children="Cluster Documents",
+                        children="Create Visualisation",
                         className="nlp-btn-disabled",
                         disabled=True,
                     )
@@ -906,7 +906,7 @@ def info_extract_params_handler(documents, query):
 )
 def info_extract_handler(select_docs, method, query, n_clicks):
     if n_clicks is not None:
-        info_extractor = DocSearcher()
+        # info_extractor = DocSearcher()
         corpus = {
             doc_name: docs[
                 docs["title"] == doc_name
@@ -943,7 +943,7 @@ def summary_params_handler(documents):
 )
 def summary_handler(select_doc, method, summary_size, n_clicks):
     if n_clicks is not None:
-        doc_summariser = DocSummariser()
+        # doc_summariser = DocSummariser()
         corpus = {
             select_doc: docs[
                 docs["title"] == select_doc
@@ -1030,7 +1030,7 @@ def wikibot_params(query, method):
 )
 def wikibot_handler(query, method, n_clicks):
     if n_clicks is not None:
-        wikibot = WikiBot()
+        # wikibot = WikiBot()
         try:
             answer = wikibot.search(query, method)
             return answer
