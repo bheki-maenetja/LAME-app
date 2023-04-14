@@ -1,1 +1,1 @@
-web: ./web-tasks.sh
+web: bash ./web-tasks.sh
