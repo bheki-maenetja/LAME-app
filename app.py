@@ -285,6 +285,7 @@ def accordion_handler(item_id):
             "doc-btn-disabled", 
             True
         )
+    print(current_doc)
 
 @app.callback(
     Output("new-doc-modal", "is_open"),
