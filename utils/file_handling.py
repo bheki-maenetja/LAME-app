@@ -83,18 +83,18 @@ def clear_folders():
     for file in os.listdir("raw_files"):
         os.remove(os.path.join("raw_files", file))
 
-def get_raw_text(f_name, extension, dir="temp"):
+def get_raw_text(f_name, extension, dir_name="temp"):
     if extension == ".pdf":
-        pdf_reader = PdfReader(os.path.join(dir, f_name))
+        pdf_reader = PdfReader(os.path.join(dir_name, f_name))
         num_pages = len(pdf_reader.pages)
         text = ""
         for i in range(num_pages):
             page = pdf_reader.pages[i]
             text += page.extract_text()
     elif extension == ".docx":
-        text = docx2txt.process(os.path.join(dir, f_name))
+        text = docx2txt.process(os.path.join(dir_name, f_name))
     elif extension in (".txt", ".md"):
-        with open(os.path.join(dir, f_name), "r") as file:
+        with open(os.path.join(dir_name, f_name), "r") as file:
             text = file.read()
     else:
         raise Exception(f"Unsupported file extension '{extension}'")
@@ -102,9 +102,9 @@ def get_raw_text(f_name, extension, dir="temp"):
     return text
 
 # Cloudinary upload
-def upload_documents(doc_title, word_count, char_count, dir="raw_files"):
+def upload_documents(doc_title, word_count, char_count, dir_name="raw_files"):
     cloudinary.uploader.upload(
-        os.path.join(dir, f"{doc_title}.txt"),
+        os.path.join(dir_name, f"{doc_title}.txt"),
         display_name=doc_title, 
         folder="LAME_upload",
         resource_type="auto",
