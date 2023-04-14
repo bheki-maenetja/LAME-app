@@ -48,14 +48,10 @@ def save_files(f_names, f_contents):
             with open(os.path.join("raw_files", f"{doc_title}.txt"), "w") as f:
                 f.write(raw_text)
 
-        cloudinary.uploader.upload(
-            os.path.join("raw_files", f"{doc_title}.txt"),
-            display_name=doc_title, 
-            folder="LAME_upload",
-            resource_type="auto",
-            tags=["LAME_upload", doc_title],
-            type="upload"
-        )
+        word_count = len(tokenize(raw_text, False))
+        char_count = len(raw_text)
+
+        upload_documents(doc_title, word_count, char_count)
     
     clear_folders()
 
@@ -66,17 +62,15 @@ def create_new_file(f_name, f_content):
         with open(os.path.join("raw_files", f"{f_name}.txt"), "w") as f:
             f.write(f_content)
         
-        cloudinary.uploader.upload(
-            os.path.join("raw_files", f"{f_name}.txt"),
-            display_name=f_name, 
-            folder="LAME_upload",
-            resource_type="auto",
-            tags=["LAME_upload", f_name],
-            type="upload"
-        )
+        raw_text = get_raw_text(f"{f_name}.txt", ".txt", "raw_files")
+        word_count = len(tokenize(raw_text, False))
+        char_count = len(raw_text)
+
+        upload_documents(f_name, word_count, char_count)
 
         clear_folders()
-    except:
+    except Exception as e:
+        print(e)
         return False
     
     return True
@@ -89,23 +83,39 @@ def clear_folders():
     for file in os.listdir("raw_files"):
         os.remove(os.path.join("raw_files", file))
 
-def get_raw_text(f_name, extension):
+def get_raw_text(f_name, extension, dir="temp"):
     if extension == ".pdf":
-        pdf_reader = PdfReader(os.path.join('temp', f_name))
+        pdf_reader = PdfReader(os.path.join(dir, f_name))
         num_pages = len(pdf_reader.pages)
         text = ""
         for i in range(num_pages):
             page = pdf_reader.pages[i]
             text += page.extract_text()
     elif extension == ".docx":
-        text = docx2txt.process(os.path.join('temp', f_name))
+        text = docx2txt.process(os.path.join(dir, f_name))
     elif extension in (".txt", ".md"):
-        with open(os.path.join('temp', f_name), "r") as file:
+        with open(os.path.join(dir, f_name), "r") as file:
             text = file.read()
     else:
         raise Exception(f"Unsupported file extension '{extension}'")
     
     return text
+
+# Cloudinary upload
+def upload_documents(doc_title, word_count, char_count, dir="raw_files"):
+    cloudinary.uploader.upload(
+        os.path.join(dir, f"{doc_title}.txt"),
+        display_name=doc_title, 
+        folder="LAME_upload",
+        resource_type="auto",
+        tags=[
+            "LAME_upload", 
+            f"fname-{doc_title}", 
+            f"wc-{word_count}",
+            f"cc-{char_count}"
+        ],
+        type="upload"
+    )
 
 # Loading Documents
 def get_documents():
@@ -122,9 +132,13 @@ def get_documents():
         url = r['url']
         res = req.get(url)
         r["content"] = res.text
-        r["title"] = next(t for t in r["tags"] if t != "LAME_upload")
-        r["word_count"] = len(tokenize(res.text, False))
-        r["char_count"] = len(res.text)
+        for t in r["tags"]:
+            if "fname-" in t:
+                r["title"] = t[6:]
+            elif "wc-" in t:
+                r["word_count"] = int(t.split("-")[-1])
+            elif "cc-" in t:
+                r["char_count"] = int(t.split("-")[-1])
     
     doc_df = pd.DataFrame.from_dict(resources)
     doc_df.sort_values("title", inplace=True, key=lambda x: x.str.lower())
