@@ -29,6 +29,7 @@ class WikiBot:
 
         # Build corpus of relevant wikipedia articles
         wiki_corpus = self._build_wiki_corpus(search_ents)
+        if wiki_corpus == {}: return "Results not found...Sorry"
 
         # Run doc searcher on new corpus of articles
         self._doc_searcher.load_files(wiki_corpus)
