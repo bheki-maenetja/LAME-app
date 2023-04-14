@@ -1,4 +1,5 @@
 #!/bin/bash
+chmod +x .
 python -m nltk.downloader all
 python -m spacy download en_core_web_lg
 python -m spacy download en_core_web_sm
