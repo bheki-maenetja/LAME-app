@@ -52,6 +52,7 @@ body {
     height: 100%;
     margin: 0;
     background-color: rgba(0,0,0, 0.1);
+    font-family: 'Raleway', sans-serif;
 }
 
 #wikibot-tagline {
@@ -235,8 +236,7 @@ body {
 }
 
 #upload-data:hover {
-    background-color: var(--darkblue);
-    border-color: var(--paleyellow);
+    background-color: var(--orange);
     color: white;
 }
 
