@@ -5,13 +5,11 @@ import dash_bootstrap_components as dbc
 
 import plotly.graph_objects as go
 
-import pandas as pd
-
 # Standard Imports
 # Local Imports
 from utils import file_handling as fh
 
-from nlp.info_extraction import DocSearcher, tokenize
+from nlp.info_extraction import DocSearcher
 from nlp.summarisation import DocSummariser
 import nlp.doc_clustering as dc
 from nlp.wikibot import WikiBot
