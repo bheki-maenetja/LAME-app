@@ -263,6 +263,7 @@ def accordion_handler(item_id):
     global current_doc
     if item_id is not None:
         current_doc = docs[docs["public_id"] == item_id].to_dict('records')[0]
+        print(current_doc)
         return (
             "doc-btn-disabled", 
             True, 
@@ -275,6 +276,7 @@ def accordion_handler(item_id):
         )
     elif item_id is None:
         current_doc = None
+        print(current_doc)
         return (
             "doc-btn", 
             False,
@@ -285,7 +287,6 @@ def accordion_handler(item_id):
             "doc-btn-disabled", 
             True
         )
-    print(current_doc)
 
 @app.callback(
     Output("new-doc-modal", "is_open"),
