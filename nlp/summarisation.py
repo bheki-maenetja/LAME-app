@@ -1,6 +1,6 @@
 # Third-Party Imports
 import nltk
-nltk.download("stopwords")
+# nltk.download("stopwords")
 import requests as req
 import openai
 from dotenv import load_dotenv
