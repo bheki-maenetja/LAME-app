@@ -308,7 +308,6 @@ def new_doc_handler(n_clicks):
     prevent_initial_call=True,
 )
 def edit_doc_handler(n_clicks):
-    global current_doc
     if n_clicks is not None:
         return (
             True, 
