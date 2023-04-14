@@ -30,7 +30,7 @@ def get_wiki_bot_section(docs, tagline):
                         options=[
                             {"label": "TF-IDF", "value": "tf-idf"}, 
                             {"label": "Cosine Similarity", "value": "cosine_sim"},
-                            {"label": "BERT", "value": "bert2"},
+                            {"label": "BERT", "value": "bert3"},
                             {"label": "OpenAI", "value": "openai"}
                         ],
                         value=None,
