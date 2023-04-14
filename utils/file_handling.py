@@ -16,6 +16,7 @@ import pandas as pd
 # Standard Library Imports
 import os
 import base64
+import json
 
 # Local Imports
 from nlp.info_extraction import tokenize
@@ -118,7 +119,7 @@ def upload_documents(doc_title, word_count, char_count, dir_name="raw_files"):
     )
 
 # Loading Documents
-def get_documents():
+def get_documents(write_to_file=False):
     resources = cloudinary.api.resources_by_tag(
         "LAME_upload",
         resource_type="raw",
@@ -143,9 +144,20 @@ def get_documents():
     doc_df = pd.DataFrame.from_dict(resources)
     doc_df.sort_values("title", inplace=True, key=lambda x: x.str.lower())
 
+    if write_to_file: doc_df.to_csv("state/docs.csv")
     return doc_df
 
 # Deleting Documents
 def delete_document(doc_id):
     res = cloudinary.uploader.destroy(doc_id, resource_type="raw")
     return res['result'] == "ok"
+
+# Current Document
+def write_current_doc(current_doc):
+    with open("state/current_doc.json", "w") as fp:
+        json.dump(current_doc, fp)
+
+def read_current_doc():
+    with open("state/current_doc.json", "r") as fp:
+        data = json.load(fp)
+    return data 

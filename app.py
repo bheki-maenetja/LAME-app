@@ -5,6 +5,8 @@ import dash_bootstrap_components as dbc
 
 import plotly.graph_objects as go
 
+import pandas as pd
+
 # Standard Imports
 # Local Imports
 from utils import file_handling as fh
@@ -38,11 +40,12 @@ WIKIBOT_TAGLINE = """
 Ask me anything and I'll search Wikipedia's 6m+ articles to find the answer
 """
 
-docs = fh.get_documents() # load documents from cloudinary
+# docs = fh.get_documents() # load documents from cloudinary
+fh.get_documents(True)
 # docs.to_csv("cache/docs.csv")
-# docs = pd.read_csv("cache/docs.csv")
+# docs = pd.read_csv("state/docs.csv")
 # print(new_docs.columns)
-current_doc = None
+# current_doc = None
 
 info_extractor = DocSearcher()
 doc_summariser = DocSummariser()
@@ -147,6 +150,7 @@ app.layout = html.Div(id="main-container", children=[
 ## Major Components
 ### Section Selector
 def section_selector(s_name):
+    docs = pd.read_csv("state/docs.csv")
     if s_name == "docs":
         return get_doc_section(docs)
     elif s_name == "info-extraction":
@@ -225,7 +229,8 @@ def refresh_page(tab_value, children):
     [Input("upload-data", "filename"), Input("upload-data", "contents")]
 )
 def upload_handler(f_names, f_contents):
-    global docs
+    # global docs
+    docs = pd.read_csv("state/docs.csv")
 
     is_success = True
 
@@ -236,7 +241,8 @@ def upload_handler(f_names, f_contents):
 
     is_success = res
     
-    docs = fh.get_documents()
+    # docs = fh.get_documents()
+    fh.get_documents(True)
     return None, is_success, not is_success, UPLOAD_TEXT
 
 
@@ -260,10 +266,11 @@ def main_tabs_handler(value): return None
     prevent_initial_call=True,
 )
 def accordion_handler(item_id):
-    global current_doc
+    # global current_doc
+    docs = pd.read_csv("state/docs.csv")
     if item_id is not None:
         current_doc = docs[docs["public_id"] == item_id].to_dict('records')[0]
-        print(current_doc)
+        fh.write_current_doc(current_doc)
         return (
             "doc-btn-disabled", 
             True, 
@@ -275,8 +282,8 @@ def accordion_handler(item_id):
             False
         )
     elif item_id is None:
-        current_doc = None
-        print(current_doc)
+        current_doc = {}
+        fh.write_current_doc(current_doc)
         return (
             "doc-btn", 
             False,
@@ -309,6 +316,7 @@ def new_doc_handler(n_clicks):
 )
 def edit_doc_handler(n_clicks):
     if n_clicks is not None:
+        current_doc = fh.read_current_doc()
         return (
             True, 
             current_doc["title"], 
@@ -326,7 +334,7 @@ def edit_doc_handler(n_clicks):
     Input("new-doc-modal-btn", "n_clicks"),
 )
 def create_doc_handler(doc_name, doc_content, n_clicks):
-    global docs
+    # global docs
 
     if n_clicks is not None:
         err_messages = [
@@ -346,7 +354,8 @@ def create_doc_handler(doc_name, doc_content, n_clicks):
         if not res:
             return no_update, False, True, err_messages[2]
         
-        docs = fh.get_documents()
+        # docs = fh.get_documents()
+        fh.get_documents(True)
         return None, True, False, "",
     return no_update, False, False, ""
 
@@ -360,8 +369,10 @@ def create_doc_handler(doc_name, doc_content, n_clicks):
     Input("edit-doc-modal-btn", "n_clicks"),
 )
 def save_doc_handler(doc_name, doc_content, n_clicks):
-    global docs
-    global current_doc
+    # global docs
+    # global current_doc
+    docs = pd.read_csv("state/docs.csv")
+    current_doc = fh.read_current_doc()
 
     if n_clicks is not None and n_clicks > 0 and current_doc is not None:
         err_messages = [
@@ -384,7 +395,8 @@ def save_doc_handler(doc_name, doc_content, n_clicks):
             if not res:
                 return no_update, False, True, err_messages[2]
             
-            docs = fh.get_documents()
+            # docs = fh.get_documents()
+            fh.get_documents(True)
             return None, True, False, ""
         except Exception as e:
             print(e)
@@ -397,6 +409,9 @@ def save_doc_handler(doc_name, doc_content, n_clicks):
     prevent_initial_call=True,
 )
 def doc_download_handler(n_clicks):
+    current_doc = fh.read_current_doc()
+    if current_doc == {}: current_doc = None
+
     if n_clicks is not None and n_clicks > 0 and current_doc is not None:
         doc_title = current_doc["title"]
         doc_content = current_doc["content"]
@@ -411,14 +426,17 @@ def doc_download_handler(n_clicks):
     prevent_initial_call=True,
 )
 def doc_delete_handler(n_clicks):
-    global docs
+    # global docs
+    current_doc = fh.read_current_doc()
+    if current_doc == {}: current_doc = None
 
     if n_clicks is not None and n_clicks > 0 and current_doc is not None:
         is_success = True
         doc_id = current_doc["public_id"]
         res = fh.delete_document(doc_id)
         is_success = res
-        docs = fh.get_documents()
+        # docs = fh.get_documents()
+        fh.get_documents(True)
         return None, is_success, not is_success
     return None, False, False
 
@@ -445,6 +463,8 @@ def info_extract_params_handler(documents, query):
 def info_extract_handler(select_docs, method, query, n_clicks):
     if n_clicks is not None:
         # info_extractor = DocSearcher()
+        docs = pd.read_csv("state/docs.csv")
+
         corpus = {
             doc_name: docs[
                 docs["title"] == doc_name
@@ -482,6 +502,8 @@ def summary_params_handler(documents):
 def summary_handler(select_doc, method, summary_size, n_clicks):
     if n_clicks is not None:
         # doc_summariser = DocSummariser()
+        docs = pd.read_csv("state/docs.csv")
+
         corpus = {
             select_doc: docs[
                 docs["title"] == select_doc
@@ -524,6 +546,8 @@ def clustering_params(documents):
 )
 def clustering_handler(select_docs, num_clusters, n_clicks):
     if n_clicks is not None:
+        docs = pd.read_csv("state/docs.csv")
+
         corpus = {
             doc_name: docs[
                 docs["title"] == doc_name
