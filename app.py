@@ -160,13 +160,6 @@ def section_selector(s_name):
     elif s_name == "wikibot":
         return get_wiki_bot_section(docs, WIKIBOT_TAGLINE)
 
-### Documents Section
-### Info Extraction Section
-### Summary Section
-### Clustering Section
-### WikiBot Section
-
-
 # Callback functions
 """
 Callback Basics
