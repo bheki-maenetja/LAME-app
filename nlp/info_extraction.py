@@ -3,7 +3,7 @@ import torch
 import nltk
 # nltk.download("punkt")
 # nltk.download("stopwords")
-from transformers import BertForQuestionAnswering, AutoModelForQuestionAnswering, BertTokenizer, AutoTokenizer
+# from transformers import BertForQuestionAnswering, AutoModelForQuestionAnswering, BertTokenizer, AutoTokenizer
 from sentence_transformers import SentenceTransformer, util
 
 import requests as req
@@ -14,6 +14,7 @@ load_dotenv()
 
 # Standard Imports
 import os
+import json
 from string import punctuation
 from math import log1p, inf
 
@@ -43,14 +44,14 @@ class DocSearcher():
         self._corpus = dict()
         self._file_matches = 2
         self._sentence_matches = 5
-        self._bert_model = BertForQuestionAnswering.from_pretrained(
-            'bert-large-uncased-whole-word-masking-finetuned-squad'
-        )
-        self._bert_tokenizer = AutoTokenizer.from_pretrained(
-            'bert-large-uncased-whole-word-masking-finetuned-squad'
-        )
+        # self._bert_model = BertForQuestionAnswering.from_pretrained(
+        #     'bert-large-uncased-whole-word-masking-finetuned-squad'
+        # )
+        # self._bert_tokenizer = AutoTokenizer.from_pretrained(
+        #     'bert-large-uncased-whole-word-masking-finetuned-squad'
+        # )
         self._sent_transformer = SentenceTransformer(
-            'sentence-transformers/all-MiniLM-L6-v2'
+            "sentence-transformers/all-MiniLM-L6-v2"
         )
     
     def view_corpus(self):
@@ -76,15 +77,18 @@ class DocSearcher():
         if s_method == 'cosine_sim':
             output_text = self._build_output_text(ranked_sents, inf)
             answer = ' '.join(nltk.sent_tokenize(output_text)[:self._sentence_matches])
-        elif s_method == 'bert':
-            output_text = self._build_output_text(ranked_sents, 512)
-            answer = self._run_model_bert(query, output_text)
-        elif s_method == 'bert2':
-            output_text = self._build_output_text(ranked_sents, inf)
-            answer = self._run_model_bert2(query, output_text, 128)
+        elif s_method == 'bert3':
+            output_text = self._build_output_text(ranked_sents, 2048)
+            answer = self._run_model_bert3(query, output_text)
         elif s_method == 'openai':
             output_text = self._build_output_text(ranked_sents, 2500)
             answer = self._run_model_openai(query, output_text)
+        # elif s_method == 'bert':
+        #     output_text = self._build_output_text(ranked_sents, 512)
+        #     answer = self._run_model_bert(query, output_text)
+        # elif s_method == 'bert2':
+        #     output_text = self._build_output_text(ranked_sents, inf)
+        #     answer = self._run_model_bert2(query, output_text, 128)
         
         return answer.strip()
     
@@ -100,125 +104,147 @@ class DocSearcher():
 
         return output_text
     
-    def _run_model_bert(self, query, text):
-        model = self._bert_model
-        tokenizer = self._bert_tokenizer
+    # def _run_model_bert(self, query, text):
+    #     model = self._bert_model
+    #     tokenizer = self._bert_tokenizer
 
-        inputs = tokenizer(
-            query,
-            text,
-            max_length=100,
-            truncation="only_second",
-            stride=50,
-            return_overflowing_tokens=True,
-            return_offsets_mapping=True
-        )
+    #     inputs = tokenizer(
+    #         query,
+    #         text,
+    #         max_length=100,
+    #         truncation="only_second",
+    #         stride=50,
+    #         return_overflowing_tokens=True,
+    #         return_offsets_mapping=True
+    #     )
 
-        tokens = tokenizer.convert_ids_to_tokens(inputs['input_ids'][0])
+    #     tokens = tokenizer.convert_ids_to_tokens(inputs['input_ids'][0])
 
-        # Running model
-        output = model(
-            input_ids=torch.tensor([inputs['input_ids'][0]]), 
-            token_type_ids=torch.tensor(inputs['token_type_ids'][0])
-        )
+    #     # Running model
+    #     output = model(
+    #         input_ids=torch.tensor([inputs['input_ids'][0]]), 
+    #         token_type_ids=torch.tensor(inputs['token_type_ids'][0])
+    #     )
 
-        # Putting answer together
-        start_i = torch.argmax(output['start_logits'])
-        end_i = torch.argmax(output['end_logits'])
+    #     # Putting answer together
+    #     start_i = torch.argmax(output['start_logits'])
+    #     end_i = torch.argmax(output['end_logits'])
 
-        answer = ' '.join(tokens[start_i:end_i+1])
-        corrected_answer = ''
-        for word in answer.split():
-            #If it's a subword token
-            if word[0:2] == '##':
-                corrected_answer += word[2:]
-            else:
-                corrected_answer += ' ' + word
+    #     answer = ' '.join(tokens[start_i:end_i+1])
+    #     corrected_answer = ''
+    #     for word in answer.split():
+    #         #If it's a subword token
+    #         if word[0:2] == '##':
+    #             corrected_answer += word[2:]
+    #         else:
+    #             corrected_answer += ' ' + word
 
-        return corrected_answer
+    #     return corrected_answer
     
-    def _run_model_bert2(self, query, context, chunk_size=512):
-        # Initialise model and tokenizer
-        tokenizer = BertTokenizer.from_pretrained(
-            'bert-large-uncased-whole-word-masking-finetuned-squad'
-        )
-        model = BertForQuestionAnswering.from_pretrained(
-            'bert-large-uncased-whole-word-masking-finetuned-squad'
-        )
+    # def _run_model_bert2(self, query, context, chunk_size=512):
+    #     # Initialise model and tokenizer
+    #     tokenizer = BertTokenizer.from_pretrained(
+    #         'bert-large-uncased-whole-word-masking-finetuned-squad'
+    #     )
+    #     model = BertForQuestionAnswering.from_pretrained(
+    #         'bert-large-uncased-whole-word-masking-finetuned-squad'
+    #     )
         
-        # Chunking
-        max_length = chunk_size
-        text_len = len(context)
+    #     # Chunking
+    #     max_length = chunk_size
+    #     text_len = len(context)
 
-        input_ids = []
-        attention_masks = []
+    #     input_ids = []
+    #     attention_masks = []
 
-        for i in range(0, text_len, max_length):
-            chunk = context[i:i+max_length]
-            encoded_dict = tokenizer.encode_plus(
-                query,
-                chunk,
-                add_special_tokens=True,
-                max_length=max_length,
-                padding="max_length",
-                return_attention_mask=True,
-                return_tensors='pt',
-                truncation=True,
-            )
+    #     for i in range(0, text_len, max_length):
+    #         chunk = context[i:i+max_length]
+    #         encoded_dict = tokenizer.encode_plus(
+    #             query,
+    #             chunk,
+    #             add_special_tokens=True,
+    #             max_length=max_length,
+    #             padding="max_length",
+    #             return_attention_mask=True,
+    #             return_tensors='pt',
+    #             truncation=True,
+    #         )
 
-            input_ids.append(encoded_dict['input_ids'])
-            attention_masks.append(encoded_dict['attention_mask'])
+    #         input_ids.append(encoded_dict['input_ids'])
+    #         attention_masks.append(encoded_dict['attention_mask'])
         
-        # Stack the chunks of input IDs and attention masks
-        input_ids = torch.cat(input_ids, dim=0)
-        attention_masks = torch.cat(attention_masks, dim=0)
+    #     # Stack the chunks of input IDs and attention masks
+    #     input_ids = torch.cat(input_ids, dim=0)
+    #     attention_masks = torch.cat(attention_masks, dim=0)
 
-        # Put the model in evaluation mode
-        model.eval()
+    #     # Put the model in evaluation mode
+    #     model.eval()
 
-        # Predict the output
-        with torch.no_grad():
-            outputs = model(input_ids, attention_mask=attention_masks)
-            start_logits, end_logits = outputs[:2]
+    #     # Predict the output
+    #     with torch.no_grad():
+    #         outputs = model(input_ids, attention_mask=attention_masks)
+    #         start_logits, end_logits = outputs[:2]
         
-        for i in range(len(input_ids)):
-            # Get the start and end indices of the answer span
-            start_ind = torch.argmax(start_logits[i])
-            end_ind = torch.argmax(end_logits[i])
+    #     for i in range(len(input_ids)):
+    #         # Get the start and end indices of the answer span
+    #         start_ind = torch.argmax(start_logits[i])
+    #         end_ind = torch.argmax(end_logits[i])
 
-            # Use the indices to get the answer span from the input text
-            answer_text = tokenizer.decode(
-                input_ids[i, start_ind:end_ind + 1], skip_special_tokens=True
-            )
+    #         # Use the indices to get the answer span from the input text
+    #         answer_text = tokenizer.decode(
+    #             input_ids[i, start_ind:end_ind + 1], skip_special_tokens=True
+    #         )
 
-            # Print the answer span
-            # print("Answer: ", answer_text)
+    #         # Print the answer span
+    #         # print("Answer: ", answer_text)
         
-        # Generate answer span
-        best_answer_ind = -1
-        max_start_logit = -1e10
-        max_end_logit = -1e10
+    #     # Generate answer span
+    #     best_answer_ind = -1
+    #     max_start_logit = -1e10
+    #     max_end_logit = -1e10
 
-        for i in range(len(input_ids)):
-            # Get the start and end logits for this chunk
-            curr_start_logit = start_logits[i].max().item()
-            curr_end_logit = end_logits[i].max().item()
+    #     for i in range(len(input_ids)):
+    #         # Get the start and end logits for this chunk
+    #         curr_start_logit = start_logits[i].max().item()
+    #         curr_end_logit = end_logits[i].max().item()
 
-            # Find the chunk with the highest start and end logits
-            if curr_start_logit + curr_end_logit > max_start_logit + max_end_logit:
-                max_start_logit = curr_start_logit
-                max_end_logit = curr_end_logit
-                best_answer_ind = i
+    #         # Find the chunk with the highest start and end logits
+    #         if curr_start_logit + curr_end_logit > max_start_logit + max_end_logit:
+    #             max_start_logit = curr_start_logit
+    #             max_end_logit = curr_end_logit
+    #             best_answer_ind = i
 
-        # Use the best answer indices to get the answer span from the input text
-        start_ind = torch.argmax(start_logits[best_answer_ind])
-        end_ind = torch.argmax(end_logits[best_answer_ind])
-        answer_text = tokenizer.decode(
-            input_ids[best_answer_ind, start_ind:end_ind + 1], 
-            skip_special_tokens=True
-        )
+    #     # Use the best answer indices to get the answer span from the input text
+    #     start_ind = torch.argmax(start_logits[best_answer_ind])
+    #     end_ind = torch.argmax(end_logits[best_answer_ind])
+    #     answer_text = tokenizer.decode(
+    #         input_ids[best_answer_ind, start_ind:end_ind + 1], 
+    #         skip_special_tokens=True
+    #     )
         
-        return answer_text
+    #     return answer_text
+    
+    def _run_model_bert3(self, query, context):
+        # Get API url and headers
+        api_url = "https://api-inference.huggingface.co/models/bert-large-uncased-whole-word-masking-finetuned-squad"
+        headers = {
+            "Authorization": f"Bearer {os.getenv('HUGGING_FACE_API_KEY')}"
+        }
+
+        payload = {
+            "inputs": {
+                "question": query,
+                "context": context
+            }
+        }
+
+        data = json.dumps(payload)
+        res = req.request("POST", api_url, headers=headers, data=data)
+        content = json.loads(res.content.decode("utf-8"))
+        answer = content.get("answer", None)
+        if not answer:
+            return f"Error:  {content.get('error', 'Something is wrong')}"
+        return answer
         
     def _run_model_openai(self, query, text):
         openai.api_key = os.getenv("OPENAI_API_KEY")
