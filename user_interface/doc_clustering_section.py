@@ -8,7 +8,7 @@ import nlp.doc_clustering as dc
 
 def get_clustering_section(docs):
     if docs is None or len(docs) < 2:
-        text = "Please upload 2 or more documents to get started with document clustering."
+        text = "Please upload 2 or more documents to get started with semantic visualisation."
         return html.H2(
             children=text,
             className="no-docs-heading"
