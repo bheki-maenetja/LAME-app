@@ -7,7 +7,7 @@ import dash_bootstrap_components as dbc
 
 def get_info_extraction_section(docs):
     if docs is None:
-        text = "Please upload documents to get started with question answering."
+        text = "Please upload documents to get started with information extraction."
         return html.H2(
             children=text,
             className="no-docs-heading"
