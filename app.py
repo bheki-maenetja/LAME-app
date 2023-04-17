@@ -155,7 +155,7 @@ def section_selector(s_name):
     elif s_name == "clustering":
         return get_clustering_section(docs)
     elif s_name == "wikibot":
-        return get_wiki_bot_section(docs, WIKIBOT_TAGLINE)
+        return get_wiki_bot_section(WIKIBOT_TAGLINE)
 
 # Callback functions
 """
@@ -224,9 +224,6 @@ def refresh_page(tab_value, children):
     [Input("upload-data", "filename"), Input("upload-data", "contents")]
 )
 def upload_handler(f_names, f_contents):
-    # global docs
-    docs = pd.read_csv("state/docs.csv")
-
     is_success = True
 
     if not f_names or not f_contents:
@@ -236,7 +233,6 @@ def upload_handler(f_names, f_contents):
 
     is_success = res
     
-    # docs = fh.get_documents()
     fh.get_documents(True)
     return None, is_success, not is_success, UPLOAD_TEXT
 
@@ -261,7 +257,6 @@ def main_tabs_handler(value): return None
     prevent_initial_call=True,
 )
 def accordion_handler(item_id):
-    # global current_doc
     docs = pd.read_csv("state/docs.csv")
     if item_id is not None:
         current_doc = docs[docs["public_id"] == item_id].to_dict('records')[0]
@@ -329,8 +324,6 @@ def edit_doc_handler(n_clicks):
     Input("new-doc-modal-btn", "n_clicks"),
 )
 def create_doc_handler(doc_name, doc_content, n_clicks):
-    # global docs
-
     if n_clicks is not None:
         err_messages = [
             "Please enter a name for your new file.",
@@ -349,7 +342,6 @@ def create_doc_handler(doc_name, doc_content, n_clicks):
         if not res:
             return no_update, False, True, err_messages[2]
         
-        # docs = fh.get_documents()
         fh.get_documents(True)
         return None, True, False, "",
     return no_update, False, False, ""
@@ -364,9 +356,6 @@ def create_doc_handler(doc_name, doc_content, n_clicks):
     Input("edit-doc-modal-btn", "n_clicks"),
 )
 def save_doc_handler(doc_name, doc_content, n_clicks):
-    # global docs
-    # global current_doc
-    docs = pd.read_csv("state/docs.csv")
     current_doc = fh.read_current_doc()
 
     if n_clicks is not None and n_clicks > 0 and current_doc is not None:
@@ -390,7 +379,6 @@ def save_doc_handler(doc_name, doc_content, n_clicks):
             if not res:
                 return no_update, False, True, err_messages[2]
             
-            # docs = fh.get_documents()
             fh.get_documents(True)
             return None, True, False, ""
         except Exception as e:
@@ -421,7 +409,6 @@ def doc_download_handler(n_clicks):
     prevent_initial_call=True,
 )
 def doc_delete_handler(n_clicks):
-    # global docs
     current_doc = fh.read_current_doc()
     if current_doc == {}: current_doc = None
 
@@ -430,7 +417,6 @@ def doc_delete_handler(n_clicks):
         doc_id = current_doc["public_id"]
         res = fh.delete_document(doc_id)
         is_success = res
-        # docs = fh.get_documents()
         fh.get_documents(True)
         return None, is_success, not is_success
     return None, False, False
@@ -457,7 +443,6 @@ def info_extract_params_handler(documents, query):
 )
 def info_extract_handler(select_docs, method, query, n_clicks):
     if n_clicks is not None:
-        # info_extractor = DocSearcher()
         docs = pd.read_csv("state/docs.csv")
 
         corpus = {
@@ -496,7 +481,6 @@ def summary_params_handler(documents):
 )
 def summary_handler(select_doc, method, summary_size, n_clicks):
     if n_clicks is not None:
-        # doc_summariser = DocSummariser()
         docs = pd.read_csv("state/docs.csv")
 
         corpus = {
@@ -587,7 +571,6 @@ def wikibot_params(query, method):
 )
 def wikibot_handler(query, method, n_clicks):
     if n_clicks is not None:
-        # wikibot = WikiBot()
         try:
             answer = wikibot.search(query, method)
             return answer
