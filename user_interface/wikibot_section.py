@@ -5,7 +5,7 @@ import dash_bootstrap_components as dbc
 # Standard Imports
 # Local Imports
 
-def get_wiki_bot_section(docs, tagline):
+def get_wiki_bot_section(tagline):
     return html.Div(
         id="wikibot-section",
         children=[
@@ -30,7 +30,7 @@ def get_wiki_bot_section(docs, tagline):
                         options=[
                             {"label": "TF-IDF", "value": "tf-idf"}, 
                             {"label": "Cosine Similarity", "value": "cosine_sim"},
-                            {"label": "BERT", "value": "bert3"},
+                            {"label": "BERT", "value": "bert"},
                             {"label": "OpenAI", "value": "openai"}
                         ],
                         value=None,

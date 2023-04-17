@@ -35,7 +35,7 @@ def get_info_extraction_section(docs):
                         options=[
                             {"label": "TF-IDF", "value": "tf-idf"}, 
                             {"label": "Cosine Similarity", "value": "cosine_sim"},
-                            {"label": "BERT", "value": "bert3"},
+                            {"label": "BERT", "value": "bert"},
                             {"label": "OpenAI", "value": "openai"}
                         ],
                         value="tf-idf",

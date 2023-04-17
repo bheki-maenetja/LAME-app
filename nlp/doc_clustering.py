@@ -7,7 +7,6 @@ import plotly.graph_objects as go
 
 import pandas as pd
 import nltk
-# nltk.download("stopwords")
 
 # Standard Imports
 from string import punctuation

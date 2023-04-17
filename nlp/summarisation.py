@@ -1,6 +1,5 @@
 # Third-Party Imports
 import nltk
-# nltk.download("stopwords")
 import requests as req
 import openai
 from dotenv import load_dotenv
@@ -63,21 +62,21 @@ class DocSummariser():
         
         # Choose method and return summary
         if method == "se":
-            return self._SE_summary(text, summary_size)
+            return self._SE_summary(text, summary_size).strip()
         elif method in ("lexR", "texR", "lsa", "luhn"):
-            return self._algo_summary(text, method, summary_size)
+            return self._algo_summary(text, method, summary_size).strip()
         elif method == "bart":
             text_chunks = self._chunk_text(text, 400)
             return " ".join(
                 self._BART_summary(chunk, summary_size)
                 for chunk in text_chunks
-            )
+            ).strip()
         elif method == "openai":
             text_chunks = self._chunk_text(text, 500)
             return " ".join(
                 self._openai_summary(chunk, summary_size)
                 for chunk in text_chunks
-            )
+            ).strip()
     
     def _SE_summary(self, text, summary_size=0.5):
         # Create word and sentence tokens
@@ -142,7 +141,6 @@ class DocSummariser():
             "inputs": text,
             "parameters": {
                 "do_sample": False,
-#                 "max_length": max(round(summary_len + 50, -2), 2),
                 "max_length": min(round(summary_len + 50, -2), word_len),
                 "min_length": max(summary_len - 10, 1)
             }
@@ -164,11 +162,15 @@ class DocSummariser():
         openai.api_key = os.getenv("OPENAI_API_KEY")
         prompt=f"Summarize the following text in no more than {summary_len} words:\n\n{text}\n\nSummary:"
 
+        max_tokens = round(summary_len + 50, -2)
+        if max_tokens < 1: max_tokens = 50
+
         res = openai.Completion.create(
             model="text-davinci-003", 
             prompt=prompt, 
             temperature=0,
-            max_tokens=round(summary_len + 50, -2),
+            max_tokens=max_tokens,
+            logprobs=0,
         )
 
         summary = res.choices[0].text

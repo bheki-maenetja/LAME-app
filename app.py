@@ -40,12 +40,7 @@ WIKIBOT_TAGLINE = """
 Ask me anything and I'll search Wikipedia's 6m+ articles to find the answer
 """
 
-# docs = fh.get_documents() # load documents from cloudinary
 fh.get_documents(True)
-# docs.to_csv("cache/docs.csv")
-# docs = pd.read_csv("state/docs.csv")
-# print(new_docs.columns)
-# current_doc = None
 
 info_extractor = DocSearcher()
 doc_summariser = DocSummariser()
