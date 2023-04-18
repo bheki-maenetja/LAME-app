@@ -19,12 +19,6 @@ from math import log1p, inf
 
 # Tokenization
 def tokenize(doc, remove_stopwords=True):
-    """
-    Given a document (represented as a string), return a list of all of the
-    words in that document, in order.
-    Process document by coverting all words to lowercase, and removing any
-    punctuation or English stopwords.
-    """
     banned = list(punctuation)
     
     if remove_stopwords:
