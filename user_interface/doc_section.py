@@ -165,10 +165,9 @@ def get_doc_section(docs):
                                     html.Div(
                                         className="doc-accord-item-content",
                                         children=[
+                                            html.P(f"Created at: {doc['created_at']}"),
                                             html.P(f"Word count: {doc['word_count']}"),
                                             html.P(f"Character count: {doc['char_count']}"),
-                                            # html.P(f"Word count: {len(tokenize(doc['content'], False))}"),
-                                            # html.P(f"Character count: {len(doc['content'])}"),
                                             html.P("Raw text:"),
                                             html.P(
                                                 children=doc["content"],
