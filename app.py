@@ -479,7 +479,7 @@ def summary_params_handler(documents):
     State("summary-size-slider", "value"),
     Input("summary-btn", "n_clicks"),
 )
-def summary_handler(select_doc, method, summary_size, n_clicks):
+def summary_handler(select_docs, method, summary_size, n_clicks):
     if n_clicks is not None:
         docs = pd.read_csv("state/docs.csv")
 
@@ -487,12 +487,13 @@ def summary_handler(select_doc, method, summary_size, n_clicks):
             select_doc: docs[
                 docs["title"] == select_doc
             ].to_dict("records")[0]["content"]
+            for select_doc in select_docs
         }
         try:
             doc_summariser.load_files(corpus)
             summary = doc_summariser.summarise(
                 method, 
-                [select_doc], 
+                select_docs, 
                 summary_size/100
             )
             doc_summariser.clear_files()

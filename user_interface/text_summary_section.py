@@ -28,7 +28,7 @@ def get_summary_section(docs):
                             dcc.Dropdown(
                                 id="summary-doc-select",
                                 options=doc_list,
-                                multi=False,
+                                multi=True,
                                 placeholder="Select documents..."
                             )
                         ]
