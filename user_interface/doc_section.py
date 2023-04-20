@@ -3,7 +3,7 @@ from dash import html, dcc
 import dash_bootstrap_components as dbc
 
 # Standard Imports
-# Local Imports
+from datetime import datetime
 
 new_doc_modal = html.Div(
     [
@@ -165,7 +165,7 @@ def get_doc_section(docs):
                                     html.Div(
                                         className="doc-accord-item-content",
                                         children=[
-                                            html.P(f"Created at: {doc['created_at']}"),
+                                            html.P(f"Date of creation: {parse_time_string(doc['created_at'])}"),
                                             html.P(f"Word count: {doc['word_count']}"),
                                             html.P(f"Character count: {doc['char_count']}"),
                                             html.P("Raw text:"),
@@ -185,3 +185,8 @@ def get_doc_section(docs):
             )
         ]
     )
+
+# Utility functions
+def parse_time_string(t_string):
+    parsed_time = datetime.strptime(t_string, "%Y-%m-%dT%H:%M:%SZ")
+    return parsed_time.strftime("%Y-%m-%d at %H:%M")
