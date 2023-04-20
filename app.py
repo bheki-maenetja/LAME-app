@@ -35,7 +35,7 @@ app.title = "Lexical Analyser Manipulator and Extractor (LAME)"
 
 server = app.server
 
-UPLOAD_TEXT = "Drag and drop, or click to upload files"
+UPLOAD_TEXT = "Drag and drop, or click to upload documents"
 WIKIBOT_TAGLINE = """
 Ask me anything and I'll search Wikipedia's 6m+ articles to find the answer
 """
