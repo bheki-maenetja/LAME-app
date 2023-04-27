@@ -11,8 +11,6 @@ import nltk
 # Standard Imports
 from string import punctuation
 
-# Local Imports
-
 # Helper Functions
 def word_tokenize(text, lower_case=False):
     banned = list(punctuation) + nltk.corpus.stopwords.words("english")

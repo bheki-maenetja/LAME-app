@@ -1,5 +1,4 @@
 # Third-Party Imports
-import torch
 import nltk
 from sentence_transformers import SentenceTransformer, util
 
@@ -34,7 +33,7 @@ class DocSearcher():
     def __init__(self):
         self._corpus = dict()
         self._file_matches = 2
-        self._sentence_matches = 5
+        self._sentence_matches = 4
         self._sent_transformer = SentenceTransformer(
             "sentence-transformers/all-MiniLM-L6-v2"
         )

@@ -17,8 +17,6 @@ import os
 import json
 from string import punctuation
 
-# Local Imports
-
 # Document Summariser Class
 class DocSummariser():
     def __init__(self):
