@@ -134,7 +134,11 @@ def get_documents(write_to_file=False):
         max_results=500,
     )['resources']
 
-    if len(resources) == 0: return None
+    if len(resources) == 0:
+        if write_to_file:
+            if "docs.csv" in os.listdir("state"):
+                os.remove(os.path.join("state", "docs.csv"))
+        return None
 
     for r in resources:
         url = r['url']
@@ -147,8 +151,8 @@ def get_documents(write_to_file=False):
                 r["word_count"] = int(t.split("-")[-1])
             elif t.startswith("cc-"):
                 r["char_count"] = int(t.split("-")[-1])
-            # elif t.startswith("doc-") in t:
-            #     r["date_of_creation"] = t[4:]
+            elif t.startswith("doc-"):
+                r["date_of_creation"] = t[4:]
     
     doc_df = pd.DataFrame.from_dict(resources)
     doc_df.sort_values("title", inplace=True, key=lambda x: x.str.lower())
