@@ -7,7 +7,6 @@ import plotly.graph_objects as go
 
 import pandas as pd
 
-# Standard Imports
 # Local Imports
 from utils import file_handling as fh
 
@@ -129,11 +128,6 @@ app.layout = html.Div(id="main-container", children=[
         ),
     ]),
     html.Div(id="section-container"),
-    html.Div(id='dummy', style={"display": "hidden"}),
-    html.Div(id='dummy2', style={"display": "hidden"}),
-    html.Div(id='dummy3', style={"display": "hidden"}),
-    html.Div(id='dummy4', style={"display": "hidden"}),
-    html.Div(id='dummy5', style={"display": "hidden"}),
     html.Div(id='reload-handler-0', style={"display": "hidden"}),
     html.Div(id='reload-handler-1', style={"display": "hidden"}),
     html.Div(id='reload-handler-2', style={"display": "hidden"}),
