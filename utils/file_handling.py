@@ -17,6 +17,7 @@ import pandas as pd
 import os
 import base64
 import json
+from datetime import datetime
 
 # Local Imports
 from nlp.info_extraction import tokenize
@@ -79,10 +80,12 @@ def create_new_file(f_name, f_content):
 
 def clear_folders():
     for file in os.listdir("temp"):
-        os.remove(os.path.join("temp", file))
+        if file != "placeholder":
+            os.remove(os.path.join("temp", file))
     
     for file in os.listdir("raw_files"):
-        os.remove(os.path.join("raw_files", file))
+        if file != "placeholder":
+            os.remove(os.path.join("raw_files", file))
 
 def get_raw_text(f_name, extension, dir_name="temp"):
     if extension == ".pdf":
@@ -104,6 +107,9 @@ def get_raw_text(f_name, extension, dir_name="temp"):
 
 # Cloudinary upload
 def upload_documents(doc_title, word_count, char_count, dir_name="raw_files"):
+    now = datetime.today()
+    creation_date = now.strftime("%Y-%m-%d at %H:%M")
+
     cloudinary.uploader.upload(
         os.path.join(dir_name, f"{doc_title}.txt"),
         display_name=doc_title, 
@@ -113,7 +119,8 @@ def upload_documents(doc_title, word_count, char_count, dir_name="raw_files"):
             "LAME_upload", 
             f"fname-{doc_title}", 
             f"wc-{word_count}",
-            f"cc-{char_count}"
+            f"cc-{char_count}",
+            f"doc-{creation_date}"
         ],
         type="upload"
     )
@@ -134,12 +141,14 @@ def get_documents(write_to_file=False):
         res = req.get(url)
         r["content"] = res.text
         for t in r["tags"]:
-            if "fname-" in t:
+            if t.startswith("fname-"):
                 r["title"] = t[6:]
-            elif "wc-" in t:
+            elif t.startswith("wc-"):
                 r["word_count"] = int(t.split("-")[-1])
-            elif "cc-" in t:
+            elif t.startswith("cc-"):
                 r["char_count"] = int(t.split("-")[-1])
+            # elif t.startswith("doc-") in t:
+            #     r["date_of_creation"] = t[4:]
     
     doc_df = pd.DataFrame.from_dict(resources)
     doc_df.sort_values("title", inplace=True, key=lambda x: x.str.lower())
