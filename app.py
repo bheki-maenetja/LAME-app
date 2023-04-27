@@ -145,7 +145,11 @@ app.layout = html.Div(id="main-container", children=[
 ## Major Components
 ### Section Selector
 def section_selector(s_name):
-    docs = pd.read_csv("state/docs.csv")
+    try:
+        docs = pd.read_csv("state/docs.csv")
+    except:
+        docs = None
+    
     if s_name == "docs":
         return get_doc_section(docs)
     elif s_name == "info-extraction":
