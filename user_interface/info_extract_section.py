@@ -2,9 +2,6 @@
 from dash import html, dcc
 import dash_bootstrap_components as dbc
 
-# Standard Imports
-# Local Imports
-
 def get_info_extraction_section(docs):
     if docs is None:
         text = "Please upload documents to get started with information extraction."

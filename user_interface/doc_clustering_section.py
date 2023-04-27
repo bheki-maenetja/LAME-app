@@ -2,7 +2,6 @@
 from dash import html, dcc
 import dash_bootstrap_components as dbc
 
-# Standard Imports
 # Local Imports
 import nlp.doc_clustering as dc
 
