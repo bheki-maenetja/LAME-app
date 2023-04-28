@@ -30,6 +30,7 @@ app = Dash(
         dbc.icons.FONT_AWESOME,
     ]
 )
+
 app.title = "Lexical Analyser Manipulator and Extractor (LAME)"
 
 server = app.server
@@ -39,8 +40,10 @@ WIKIBOT_TAGLINE = """
 Ask me anything and I'll search Wikipedia's 6m+ articles to find the answer
 """
 
+# Load documents
 fh.get_documents(True)
 
+# Initialise classes for info extraction and summarisation
 info_extractor = DocSearcher()
 doc_summariser = DocSummariser()
 wikibot = WikiBot()

@@ -247,7 +247,6 @@ body {
 
 #main-tabs .main-tab {
     border: 0.1em solid var(--orange);
-    /* border-radius: 1em 1em 0 0; */
     background-color: var(--paleyellow);
 }
 
