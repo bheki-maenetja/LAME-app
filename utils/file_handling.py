@@ -40,7 +40,7 @@ def save_files(f_names, f_contents):
     return True
 
 def create_new_file(f_name, f_content):
-    base_url = os.getenv("BASE_URL")
+    base_url = os.getenv("BACKEND_URL")
 
     now = datetime.today()
     creation_date = now.strftime("%Y-%m-%d at %H:%M")
@@ -68,7 +68,7 @@ def create_new_file(f_name, f_content):
     return True
 
 def update_file(doc_id, f_name, f_content):
-    base_url = os.getenv("BASE_URL")
+    base_url = os.getenv("BACKEND_URL")
 
     word_count = len(tokenize(f_content, False))
     char_count = len(f_content)
@@ -121,7 +121,7 @@ def get_raw_text(f_name, extension, dir_name="temp"):
 
 # Loading documents
 def get_documents(write_to_file=False):
-    base_url = os.getenv("BASE_URL")
+    base_url = os.getenv("BACKEND_URL")
 
     res = req.get(base_url + "/docs/")
     docs = res.json()
@@ -137,7 +137,7 @@ def get_documents(write_to_file=False):
 
 # Deleting Documents
 def delete_document(doc_id):
-    base_url = os.getenv("BASE_URL")
+    base_url = os.getenv("BACKEND_URL")
     res = req.delete(f"{base_url}/docs/{doc_id}/")
     return res.status_code == 204
 
