@@ -144,6 +144,7 @@ app.layout = html.Div(id="main-container", children=[
 def section_selector(s_name):
     try:
         docs = pd.read_csv("state/docs.csv")
+        if docs.empty: docs = None
     except:
         docs = None
     

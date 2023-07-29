@@ -124,10 +124,14 @@ def get_documents(write_to_file=False):
     base_url = os.getenv("BASE_URL")
 
     res = req.get(base_url + "/docs/")
-    if res.status_code == 200:
-        doc_df = pd.DataFrame.from_dict(res.json())
+    docs = res.json()
 
-    doc_df.sort_values("title", inplace=True, key=lambda x: x.str.lower())
+    if res.status_code == 200:
+        doc_df = pd.DataFrame.from_dict(docs)
+
+    if len(docs) > 0:
+        doc_df.sort_values("title", inplace=True, key=lambda x: x.str.lower())
+    
     if write_to_file: doc_df.to_csv("state/docs.csv")
     return doc_df
 
