@@ -260,7 +260,7 @@ def main_tabs_handler(value): return None
 def accordion_handler(item_id):
     docs = pd.read_csv("state/docs.csv")
     if item_id is not None:
-        current_doc = docs[docs["public_id"] == item_id].to_dict('records')[0]
+        current_doc = docs[docs["id"] == int(item_id)].to_dict('records')[0]
         fh.write_current_doc(current_doc)
         return (
             "doc-btn-disabled", 
@@ -373,10 +373,9 @@ def save_doc_handler(doc_name, doc_content, n_clicks):
         elif doc_content.strip() == "":
             return no_update, False, True, err_messages[1]
         
-        doc_id = current_doc["public_id"]
+        doc_id = current_doc["id"]
         try:
-            fh.delete_document(doc_id)
-            res = fh.create_new_file(doc_name, doc_content)
+            res = fh.update_file(doc_id, doc_name, doc_content)
             if not res:
                 return no_update, False, True, err_messages[2]
             
@@ -415,7 +414,7 @@ def doc_delete_handler(n_clicks):
 
     if n_clicks is not None and n_clicks > 0 and current_doc is not None:
         is_success = True
-        doc_id = current_doc["public_id"]
+        doc_id = current_doc["id"]
         res = fh.delete_document(doc_id)
         is_success = res
         fh.get_documents(True)

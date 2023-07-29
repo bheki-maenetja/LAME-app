@@ -154,15 +154,15 @@ def get_doc_section(docs):
                         id="doc-accord",
                         children=[
                             dbc.AccordionItem(
-                                id=doc["public_id"],
-                                item_id=doc["public_id"],
+                                id=str(doc["id"]),
+                                item_id=str(doc["id"]),
                                 title=doc["title"],
                                 class_name="doc-accord-item",
                                 children=[
                                     html.Div(
                                         className="doc-accord-item-content",
                                         children=[
-                                            html.P(f"Date of creation: {doc['date_of_creation']}"),
+                                            html.P(f"Date of creation: {doc['creation_date']}"),
                                             html.P(f"Word count: {doc['word_count']}"),
                                             html.P(f"Character count: {doc['char_count']}"),
                                             html.P("Raw text:"),
