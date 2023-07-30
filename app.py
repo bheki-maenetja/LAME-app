@@ -5,8 +5,6 @@ import dash_bootstrap_components as dbc
 
 import plotly.graph_objects as go
 
-import pandas as pd
-
 # Local Imports
 from utils import file_handling as fh
 
@@ -39,9 +37,6 @@ UPLOAD_TEXT = "Drag and drop, or click to upload documents"
 WIKIBOT_TAGLINE = """
 Ask me anything and I'll search Wikipedia's 6m+ articles to find the answer
 """
-
-# Load documents
-fh.get_documents(True)
 
 # Initialise classes for info extraction and summarisation
 info_extractor = DocSearcher()
@@ -142,11 +137,15 @@ app.layout = html.Div(id="main-container", children=[
 ## Major Components
 ### Section Selector
 def section_selector(s_name):
-    try:
-        docs = pd.read_csv("state/docs.csv")
-        if docs.empty: docs = None
-    except:
-        docs = None
+    if s_name != "wikibot":
+        try:
+            docs = fh.get_documents()
+            if docs.empty: docs = None
+        except:
+            docs = None
+    else:
+        return get_wiki_bot_section(WIKIBOT_TAGLINE)
+
     
     if s_name == "docs":
         return get_doc_section(docs)
@@ -156,8 +155,6 @@ def section_selector(s_name):
         return get_summary_section(docs)
     elif s_name == "clustering":
         return get_clustering_section(docs)
-    elif s_name == "wikibot":
-        return get_wiki_bot_section(WIKIBOT_TAGLINE)
 
 # Callback functions
 """
@@ -235,7 +232,6 @@ def upload_handler(f_names, f_contents):
 
     is_success = res
     
-    fh.get_documents(True)
     return None, is_success, not is_success, UPLOAD_TEXT
 
 
@@ -259,9 +255,8 @@ def main_tabs_handler(value): return None
     prevent_initial_call=True,
 )
 def accordion_handler(item_id):
-    docs = pd.read_csv("state/docs.csv")
     if item_id is not None:
-        current_doc = docs[docs["id"] == int(item_id)].to_dict('records')[0]
+        current_doc = fh.get_document(item_id)
         fh.write_current_doc(current_doc)
         return (
             "doc-btn-disabled", 
@@ -344,7 +339,6 @@ def create_doc_handler(doc_name, doc_content, n_clicks):
         if not res:
             return no_update, False, True, err_messages[2]
         
-        fh.get_documents(True)
         return None, True, False, "",
     return no_update, False, False, ""
 
@@ -444,7 +438,7 @@ def info_extract_params_handler(documents, query):
 )
 def info_extract_handler(select_docs, method, query, n_clicks):
     if n_clicks is not None:
-        docs = pd.read_csv("state/docs.csv")
+        docs = fh.get_documents()
 
         corpus = {
             doc_name: docs[
@@ -482,7 +476,7 @@ def summary_params_handler(documents):
 )
 def summary_handler(select_docs, method, summary_size, n_clicks):
     if n_clicks is not None:
-        docs = pd.read_csv("state/docs.csv")
+        docs = fh.get_documents()
 
         corpus = {
             select_doc: docs[
@@ -527,8 +521,7 @@ def clustering_params(documents):
 )
 def clustering_handler(select_docs, num_clusters, n_clicks):
     if n_clicks is not None:
-        docs = pd.read_csv("state/docs.csv")
-
+        docs = fh.get_documents()
         corpus = {
             doc_name: docs[
                 docs["title"] == doc_name
