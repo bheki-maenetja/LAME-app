@@ -135,6 +135,15 @@ def get_documents(write_to_file=False):
     if write_to_file: doc_df.to_csv("state/docs.csv")
     return doc_df
 
+def get_document(doc_id):
+    base_url = os.getenv("BACKEND_URL")
+
+    res = req.get(base_url + f"/docs/{doc_id}/")
+    doc = res.json()
+
+    if res.status_code == 200: return doc
+    return {}
+
 # Deleting Documents
 def delete_document(doc_id):
     base_url = os.getenv("BACKEND_URL")
