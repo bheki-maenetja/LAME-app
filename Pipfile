@@ -25,6 +25,7 @@ docx2txt = "*"
 cloudinary = "*"
 dash-bootstrap-components = "*"
 gunicorn = "*"
+werkzeug = "*"
 
 [dev-packages]
 
