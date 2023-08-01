@@ -17,7 +17,7 @@ from user_interface.doc_section import get_doc_section
 from user_interface.info_extract_section import get_info_extraction_section
 from user_interface.text_summary_section import get_summary_section
 from user_interface.doc_clustering_section import get_clustering_section
-from user_interface.wikibot_section import get_wiki_bot_section
+from user_interface.wikibot_section import get_wiki_bot_section, get_wiki_bot_section_2
 
 # Global Variables
 app = Dash(
@@ -144,9 +144,8 @@ def section_selector(s_name):
         except:
             docs = None
     else:
-        return get_wiki_bot_section(WIKIBOT_TAGLINE)
+        return get_wiki_bot_section_2(WIKIBOT_TAGLINE)
 
-    
     if s_name == "docs":
         return get_doc_section(docs)
     elif s_name == "info-extraction":
@@ -576,4 +575,4 @@ def wikibot_handler(query, method, n_clicks):
 
 # Running server
 if __name__ == "__main__":
-    app.run_server(debug=False, host="0.0.0.0")
+    app.run_server(debug=True, host="0.0.0.0")

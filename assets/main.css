@@ -118,8 +118,51 @@ body {
     justify-content: center;
     width: 100%;
     height: 100%;
-    padding: 2em;
+    /* padding: 2em; */
+    padding: 0em;
     background-color: rgba(0,0,0, 0.2);
+}
+
+#wikibot-message-space {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: scroll;
+    background-color: var(--orange);
+}
+
+#wikibot-message {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding: 1em;
+}
+
+#wikibot-message.user {
+    justify-content: flex-start;
+    background-color: rgba(0,0,0, 0.01);
+}
+
+#wikibot-message.bot {
+    justify-content: flex-end;
+    background-color: rgba(0,0,0, 0.05);
+}
+
+#wikibot-message-content {
+    padding: 1em;
+    max-width: 25%;
+}
+
+#wikibot-message-content.user {
+    border-radius: 0em 1em 0em 1em;
+    background-color: var(--paleyellow);
+}
+
+#wikibot-message-content.bot {
+    border-radius: 1em 0em 1em 0em;
+    background-color: var(--darkblue);
+    color: white;
 }
 
 #wikibot-section > * {
@@ -185,7 +228,8 @@ body {
 #wikibot-params {
     border: 0.2em solid var(--darkblue);
     border-radius: 1em;
-    margin-bottom: 1em;
+    /* margin-bottom: 1em; */
+    margin-bottom: 0em;
 }
 
 #info-extract-output, #summary-output, #wikibot-output {
@@ -510,7 +554,7 @@ body {
 
 /* Icons */
 #wikibot-icon {
-    font-size: 5em;
+    font-size: 3em;
     text-align: center;
     color: var(--paleyellow);
     text-shadow: 0px 0px 0.08em black;
