@@ -1,5 +1,5 @@
 # Third-Party Imports
-from dash import Dash, html, dcc, no_update
+from dash import Dash, html, dcc, no_update, ctx
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 
@@ -17,7 +17,7 @@ from user_interface.doc_section import get_doc_section
 from user_interface.info_extract_section import get_info_extraction_section
 from user_interface.text_summary_section import get_summary_section
 from user_interface.doc_clustering_section import get_clustering_section
-from user_interface.wikibot_section import get_wiki_bot_section, get_wiki_bot_section_2
+from user_interface.wikibot_section import get_wiki_bot_section_2, create_wiki_bot_message
 
 # Global Variables
 app = Dash(
@@ -35,7 +35,7 @@ server = app.server
 
 UPLOAD_TEXT = "Drag and drop, or click to upload documents"
 WIKIBOT_TAGLINE = """
-Ask me anything and I'll search Wikipedia's 6m+ articles to find the answer
+Ask me anything and I'll search Wikipedia's 6m+ articles to find the answer.
 """
 
 # Initialise classes for info extraction and summarisation
@@ -46,6 +46,7 @@ wikibot = WikiBot()
 # UI Layout
 ## Main App Layout (headings, file saver and file selector)
 app.layout = html.Div(id="main-container", children=[
+    dcc.Store(id="wikibot-query-temp"),
     dcc.ConfirmDialog(
         id='confirm-save',
         message='Your file(s) were saved successfully.\nPress OK to continue'
@@ -555,23 +556,67 @@ def wikibot_params(query, method):
         return False, "nlp-btn"
     return True, "nlp-btn-disabled"
 
+# @app.callback(
+#     Output("wikibot-output-content", "value"),
+#     State("wikibot-query", "value"),
+#     State("wikibot-method-select", "value"),
+#     Input("wikibot-btn", "n_clicks"),
+#     suppress_callback_exceptions=True,
+#     prevent_initial_call=True,
+# )
+# def wikibot_handler(query, method, n_clicks):
+#     if n_clicks is not None:
+#         try:
+#             answer = wikibot.search(query, method)
+#             return answer
+#         except Exception as e:
+#             print(e)
+#             return f"Error — something went wrong\n{e}"
+#     return ""
+
 @app.callback(
-    Output("wikibot-output-content", "value"),
+    Output("wikibot-message-space", "children"),
+    Output("wikibot-query-temp", "data"),
+    Output("wikibot-query", "value"),
     State("wikibot-query", "value"),
-    State("wikibot-method-select", "value"),
     Input("wikibot-btn", "n_clicks"),
+    Input("wikibot-message-space", "children"),
     suppress_callback_exceptions=True,
-    prevent_initial_call=True,
+    prevent_intial_call=True,
 )
-def wikibot_handler(query, method, n_clicks):
-    if n_clicks is not None:
-        try:
-            answer = wikibot.search(query, method)
-            return answer
-        except Exception as e:
-            print(e)
-            return f"Error — something went wrong\n{e}"
-    return ""
+def wikibot_user_message_handler(query, n_clicks, current_state):
+    if n_clicks is None: return current_state, "", query
+    triggered_id = ctx.triggered_id
+    # print(current_state, create_wiki_bot_message(query), sep="\n\n\n")
+    user_message = create_wiki_bot_message(query)
+    temp_message = create_wiki_bot_message("", False, True)
+    return current_state + [user_message, temp_message], query, ""
+
+@app.callback(
+    Output("temp-message", "children"),
+    Output("temp-message", "hidden"),
+    Output("temp-message", "id"),
+    State("wikibot-query-temp", "data"),
+    State("wikibot-method-select", "value"),
+    Input("wikibot-message-space", "children")
+)
+def wikibot_bot_message_handler(query, method, current_state):
+    print(ctx.triggered_id)
+    # print("Searching wikipedia...")
+    try:
+        # print("Retrieving answer...")
+        new_message = wikibot.search(query, method)
+        # print("Creating message...")
+    except Exception as e:
+        print(e)
+        new_message = f"Error — something went wrong\n{e}"
+        
+        # print("Returning message...")
+    
+    return [html.Div(
+        className="wikibot-message-content bot", 
+        children=html.P(new_message)
+    )], False, ""
 
 # Running server
 if __name__ == "__main__":

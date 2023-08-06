@@ -2,33 +2,6 @@
 from dash import html, dcc
 import dash_bootstrap_components as dbc
 
-# Standard Imports
-# Local Imports
-
-wikibot_user_message = html.Div(
-    id="wikibot-message",
-    className="user",
-    children=[
-        html.Div(
-            id="wikibot-message-content",
-            className="user",
-            children="This is a user message. Lorem ipsum bla bla bla...",
-        )
-    ]
-)
-
-wikibot_bot_message = html.Div(
-    id="wikibot-message",
-    className="bot",
-    children=[
-        html.Div(
-            id="wikibot-message-content",
-            className="bot",
-            children="This is a bot message. Lorem ipsum bla bla bla...",
-        )
-    ]
-)
-
 def get_wiki_bot_section(tagline):
     return html.Div(
         id="wikibot-section",
@@ -88,6 +61,29 @@ def get_wiki_bot_section(tagline):
         ]
     )
 
+def create_wiki_bot_message(message, is_user=True, is_temp=False):
+    if is_temp:
+        return html.Div(
+            id="temp-message",
+            className="wikibot-message bot",
+            hidden=True,
+            children=[
+                html.Div(
+                    className=f"wikibot-message-content bot",
+                    children="Temporary...placeholder for something else!"
+                )
+            ]
+        )
+    return html.Div(
+        className=f"wikibot-message {'user' if is_user else 'bot'}",
+        children=[
+            html.Div(
+                className=f"wikibot-message-content {'user' if is_user else 'bot'}",
+                children=message,
+            )
+        ]
+    )
+
 def get_wiki_bot_section_2(tagline):
     return html.Div(
         id="wikibot-section",
@@ -95,7 +91,6 @@ def get_wiki_bot_section_2(tagline):
             html.Div(
                 id="wikibot-params",
                 children=[
-                    # html.H3(id="wikibot-tagline", children=tagline),
                     dbc.Select(
                         id="wikibot-method-select",
                         placeholder="Select a Search Method",
@@ -115,9 +110,7 @@ def get_wiki_bot_section_2(tagline):
                 id="wikibot-message-space",
                 children=[
                     html.Div([], style={"flexGrow":"1"}),
-                    wikibot_bot_message,
-                    wikibot_user_message,
-                    wikibot_bot_message,
+                    create_wiki_bot_message(tagline, False),
                 ]
             ),
             html.Div(
@@ -131,7 +124,7 @@ def get_wiki_bot_section_2(tagline):
                     ),
                     html.Button(
                         id="wikibot-btn",
-                        children="Search",
+                        children="Send",
                         className="nlp-btn-disabled",
                         disabled=True,
                     )
