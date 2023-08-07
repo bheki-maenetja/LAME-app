@@ -66,7 +66,9 @@ def get_wiki_bot_section(tagline):
                     ),
                     html.Button(
                         id="wikibot-btn",
-                        children="Send",
+                        children=[
+                            html.I(className="bi bi-send-fill")
+                        ],
                         className="nlp-btn-disabled",
                         disabled=True,
                     )
