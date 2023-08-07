@@ -94,7 +94,7 @@ class WikiBot:
         wiki = wikipediaapi.Wikipedia('en')
         ids = [k[0] for k in self._main_corpus.keys()]
         new_corpus = dict()
-        
+
         for ent in search_ents:
             page = wiki.page(ent)
             if page.exists():
@@ -103,8 +103,8 @@ class WikiBot:
                 if doc_id not in ids:
                     new_corpus[key] = page.text
                     ids.append(doc_id)
-                else:
-                    print(f"{ent} is already in corpus.")
+                elif doc_id in self._main_corpus.keys():
+                    print(f"{ent} is already in main corpus.")
                     new_corpus[key] = self._main_corpus[key]
-        
+            
         return new_corpus
