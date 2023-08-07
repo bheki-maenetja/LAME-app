@@ -17,7 +17,7 @@ from user_interface.doc_section import get_doc_section
 from user_interface.info_extract_section import get_info_extraction_section
 from user_interface.text_summary_section import get_summary_section
 from user_interface.doc_clustering_section import get_clustering_section
-from user_interface.wikibot_section import get_wiki_bot_section_2, create_wiki_bot_message
+from user_interface.wikibot_section import get_wiki_bot_section, create_wiki_bot_message
 
 # Global Variables
 app = Dash(
@@ -145,7 +145,7 @@ def section_selector(s_name):
         except:
             docs = None
     else:
-        return get_wiki_bot_section_2(WIKIBOT_TAGLINE)
+        return get_wiki_bot_section(WIKIBOT_TAGLINE)
 
     if s_name == "docs":
         return get_doc_section(docs)
@@ -556,24 +556,6 @@ def wikibot_params(query, method):
         return False, "nlp-btn"
     return True, "nlp-btn-disabled"
 
-# @app.callback(
-#     Output("wikibot-output-content", "value"),
-#     State("wikibot-query", "value"),
-#     State("wikibot-method-select", "value"),
-#     Input("wikibot-btn", "n_clicks"),
-#     suppress_callback_exceptions=True,
-#     prevent_initial_call=True,
-# )
-# def wikibot_handler(query, method, n_clicks):
-#     if n_clicks is not None:
-#         try:
-#             answer = wikibot.search(query, method)
-#             return answer
-#         except Exception as e:
-#             print(e)
-#             return f"Error — something went wrong\n{e}"
-#     return ""
-
 @app.callback(
     Output("wikibot-message-space", "children"),
     Output("wikibot-query-temp", "data"),
@@ -586,37 +568,28 @@ def wikibot_params(query, method):
 )
 def wikibot_user_message_handler(query, n_clicks, current_state):
     if n_clicks is None: return current_state, "", query
-    triggered_id = ctx.triggered_id
-    # print(current_state, create_wiki_bot_message(query), sep="\n\n\n")
     user_message = create_wiki_bot_message(query)
     temp_message = create_wiki_bot_message("", False, True)
     return current_state + [user_message, temp_message], query, ""
 
 @app.callback(
     Output("temp-message", "children"),
-    Output("temp-message", "hidden"),
     Output("temp-message", "id"),
     State("wikibot-query-temp", "data"),
     State("wikibot-method-select", "value"),
     Input("wikibot-message-space", "children")
 )
 def wikibot_bot_message_handler(query, method, current_state):
-    print(ctx.triggered_id)
-    # print("Searching wikipedia...")
     try:
-        # print("Retrieving answer...")
         new_message = wikibot.search(query, method)
-        # print("Creating message...")
     except Exception as e:
         print(e)
         new_message = f"Error — something went wrong\n{e}"
-        
-        # print("Returning message...")
     
     return [html.Div(
         className="wikibot-message-content bot", 
-        children=html.P(new_message)
-    )], False, ""
+        children=new_message
+    )], ""
 
 # Running server
 if __name__ == "__main__":
