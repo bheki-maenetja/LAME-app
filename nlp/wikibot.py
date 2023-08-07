@@ -107,5 +107,5 @@ class WikiBot:
                 elif doc_id in orig_ids:
                     print(f"{ent} is already in main corpus.")
                     new_corpus[key] = self._main_corpus[key]
-            print(new_corpus)
+        
         return new_corpus
