@@ -581,16 +581,33 @@ def wikibot_user_message_handler(query, n_clicks, current_state):
 )
 def wikibot_bot_message_handler(query, method, current_state):
     try:
-        new_message = wikibot.search(query, method)
+        new_message, articles = wikibot.search(query, method)
     except Exception as e:
         print(e)
         new_message = f"Error — something went wrong\n{e}"
+        articles = []
     
+    if articles == []:
+        return [html.Div(
+            className="wikibot-message-content bot", 
+            children=new_message
+        )], ""
+
     return [html.Div(
-        className="wikibot-message-content bot", 
-        children=new_message
-    )], ""
+            className=f"wikibot-message-content bot",
+            children=[
+                html.P(new_message),
+                html.Hr(),
+                html.P("Related Articles"),
+                html.Ul(
+                    children=[
+                        html.Li(html.A(art, href=art, target="_blank")) 
+                        for art in articles
+                    ]
+                )
+            ]
+        )], ""
 
 # Running server
 if __name__ == "__main__":
-    app.run_server(debug=False, host="0.0.0.0")
+    app.run_server(debug=True, host="0.0.0.0")

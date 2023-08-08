@@ -160,7 +160,6 @@ body {
 .wikibot-message-content.bot {
     border-radius: 1em 0em 1em 0em;
     background-color: var(--vanilla);
-    display: inline-flex;
 }
 
 #wikibot-section > * {

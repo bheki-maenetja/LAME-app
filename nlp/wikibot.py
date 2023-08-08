@@ -28,7 +28,7 @@ class WikiBot:
 
         # Build corpus of relevant wikipedia articles
         wiki_corpus = self._build_wiki_corpus(search_ents)
-        if wiki_corpus == {}: return "Results not found...Sorry"
+        if wiki_corpus == {}: return "Results not found...Sorry", []
 
         # Run doc searcher on new corpus of articles
         self._doc_searcher.load_files(wiki_corpus)
@@ -39,8 +39,8 @@ class WikiBot:
         self._main_corpus.update(wiki_corpus)
 
         # Update and return search result
-        result += "\n\nRelated articles\n• " + "\n• ".join([k[2] for k in wiki_corpus.keys()])
-        return result
+        articles = [k[2] for k in wiki_corpus.keys()]
+        return result, articles
 
     def _get_named_entities(self, query):
         # Intialise nlp model
