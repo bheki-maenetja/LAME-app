@@ -63,3 +63,4 @@ Lexical Analyser Manipulator and Extractor (LAME) is a project that seeks to exp
 </kbd>
 
 ## Development
+This project is a fullstack web application. The backend consists of a PostgreSQL database hosted on a Django server. The frontend was built using Dash and styled with regular CSS as well as the Bootstrap CSS framework. The backend is quite basic, with only one Django app and model for documents created/uploaded by the user.
