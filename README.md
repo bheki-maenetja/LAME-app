@@ -273,60 +273,13 @@ def search(self, query, method):
 
 ## Reflection
 ### Challenges
+- Whilst there were no serious obstacles during the development of LAME, getting to grips with the multitude of libraries, packages and APIs necessary for its NLP functionality was quite tedious at times and definitely slowed down the development process.
+
 ### Room for Improvement
+- **Better hardware:** a limiting factor of LAME’s NLP functionality is the hardware resources on which it is hosted. Some of the statistical NLP techniques used by LAME are computationally expensive, needing to make thousands of calculations in order to deliver a result; this only becomes apparent for large documents. LAME is hosted across a CPU-based machinery on Heroku and Railway. Given that these services do not provide GPU-accelerated hardware, the only possible resolutions for this issue are to find algorithmic efficiencies in the system’s code base or to move the entire system to a new hosting service.
+- **A more powerful document editor:** LAME's document editing capabilities fall well short of commercial word processors such as Microsoft Word and Google Docs. LAME’s document editor is more akin to a basic text editor, with users being unable to apply stylistic changes such as changing font colour/size/weight or underlining/highlighting text. This limits LAME’s utility as an out-and-out word processor and places more of an emphasis on its NLP capabilities.
 
 ## Future Features
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- **User accounts:** given that LAME was originally devised as merely a practical implementation of certain NLP techniques and a demonstration of how those techniques can be integrated into a word processor application, it currently does not feature any authentication mechanism or user accounts; meaning all documents on LAME are accessible to all users of LAME. Obviously, to make the system viable for serious personal and commercial use, LAME will need to have some sort of authentication layer coupled with the provision of user accounts that can associate individual users with only the documents that they create and/or upload to the system. This will require a redesign of the system’s backend.
+- **Language translation:** another possible future addition to the next iteration of LAME is an expansion of its NLP capabilities; specifically, the addition of language translation features. Currently, LAME uses NLP techniques for the tasks of information extraction and text summarisation. And, it can only do so effectively for English language documents. However, many of the NLP techniques used by LAME – particularly those from the neural approach – can be applied to the task of language translation. The addition of language translation capabilities to LAME would enhance the system’s utility in two significant ways. Firstly, it would allow users to perform information extraction and text summarisation on documents written in languages other than English. Secondly, users would be able to take existing documents and translate them between different languages.
+- **Additional word processing features:** as mentioned in the "Room for Improvement" section, LAME’s document editor lacks many of the helpful formatting tools common in modern word processor applications. Therefore, any future version of the system will certainly include a greater breadth of text formatting features that allow users to apply a variety of stylistic changes to the document text. This will also include mechanisms for structuring text such as bullet point (or numbered) lists and headers & footers.
