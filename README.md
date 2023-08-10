@@ -28,7 +28,8 @@ Lexical Analyser Manipulator and Extractor (LAME) is a project that seeks to exp
 
 ### Documents
 <figcaption>The Documents Page</figcation>
-<img src="/assets/docsPage.png" width="100%" />
+<img src="/assets/docsPage.png" width="45%" />
+<img src="/assets/docsPage-2.png" width="45%" />
 
 ### Information Extraction
 ### Text Summarisation
