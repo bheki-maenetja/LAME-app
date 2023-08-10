@@ -57,3 +57,9 @@ Lexical Analyser Manipulator and Extractor (LAME) is a project that seeks to exp
 </kbd>
 
 ### WikiBot
+<figcaption>Users can interact with a chatbot tool that uses Wikipedia articles to answer natural language queries</figcaption>
+<kbd>
+<img src="/assets/wikibot.gif" width="100%" />
+</kbd>
+
+## Development
