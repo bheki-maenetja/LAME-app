@@ -30,16 +30,30 @@ Lexical Analyser Manipulator and Extractor (LAME) is a project that seeks to exp
 <figcaption>The Documents Page</figcation>
 <kbd>
 <img src="/assets/docsPage.png" width="100%" />
-<hr>
 <img src="/assets/docsPage-2.png" width="100%" />
 </kbd>
-
+<hr>
 <figcaption>Users can create, upload and edit documents</figcaption>
 <kbd>
 <img src="/assets/docsPage.gif" width="100%" />
 </kbd>
 
 ### Information Extraction
+<figcaption>Users can use natural language queries to extract information from documents</figcaption>
+<kbd>
+<img src="/assets/infoExtract.gif" width="100%" />
+</kbd>
+
 ### Text Summarisation
+<figcaption>Users can create text summaries of single or multiple documents</figcaption>
+<kbd>
+<img src="/assets/textSum.gif" width="100%" />
+</kbd>
+
 ### Semantic Visualisation
+<figcaption>Users can visualise the semantic similarities between documents</figcaption>
+<kbd>
+<img src="/assets/semVis.gif" width="100%" />
+</kbd>
+
 ### WikiBot
