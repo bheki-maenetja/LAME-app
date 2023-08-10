@@ -1,4 +1,4 @@
-# Lexical Analyser Manipulator and Extractor (L.A.M.E)
+# Lexical Analyser Manipulator and Extractor (LAME)
 Lexical Analyser Manipulator and Extractor (LAME) is a web-based word processing application that allows users to perform information extraction and text summarisation on documents. It also features a chatbot tool that uses Wikipedia articles to answer natural language queries.
 
 ## Getting Started
@@ -22,3 +22,15 @@ Lexical Analyser Manipulator and Extractor (LAME) is a web-based word processing
 - Third-party APIs
   * [OpenAI](https://openai.com/blog/openai-api/)
   * [Hugging Face](https://huggingface.co/)
+
+## Overview
+Lexical Analyser Manipulator and Extractor (LAME) is a project that seeks to explore natural language processing (NLP) techniques as applied to the tasks of information extraction and text summarisation. The project explored methods from the symbolic, statistical and neural approaches to NLP and tied together some of their most prevalent techniques in a practical implementation that provides real-world utility to users. The system — a web-based word processing application — allows users to perform information extraction and text summarisation on documents. It also features a chatbot tool that uses Wikipedia articles to answer natural language queries.
+
+### Documents
+<figcaption>The Documents Page</figcation>
+<img src="/assets/docsPage.png" width="100%" />
+
+### Information Extraction
+### Text Summarisation
+### Semantic Visualisation
+### WikiBot
